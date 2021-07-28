@@ -16,7 +16,7 @@ class Board:
 
     def print_board(self):
         for row in self.board:
-            print("[ " + " ".join(row).center(20) + " ]")
+            print("[ " + "".join(row) + " ]")
 
 class GameCard:
     def __init__(self, question):

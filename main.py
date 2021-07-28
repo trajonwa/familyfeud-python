@@ -5,10 +5,7 @@ from classes import Team
 ### Current Issues ###
 
 # Not sure how to handle synoynms/similar answers
-# You guess incorrectly four times instead of three based on the current while loop
 # Whenever the answers are printing on screen, there are some annoying spaces
-
-
 
 '''
 Variables and Two Functions for the game
@@ -68,7 +65,7 @@ while is_running:
             board.print_board()
             answer = input(f"{current_team}, What is your answer: ")
             print()
-            if missed_answers == 3:
+            if missed_answers == 2:
                 print("Oops, you've guessed incorrectly three times!")
                 current_team = get_next_team()
                 break
