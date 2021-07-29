@@ -1,5 +1,6 @@
 import os
 from time import sleep, time
+from gtts import gTTS
 from classes import GameCard
 from classes import Board
 from classes import Team
@@ -18,6 +19,32 @@ temp_score = 0
 missed_answers = 0
 answer = ""
 round = 0
+
+def instructions():
+    '''
+    This function is used to present the game instructions to the teams. It uses Google Text to Speech API
+    to convert the text instructions into speech instructions.
+    '''
+    # The text that you want to convert to audio
+    file = open("Instructions.txt", "r")
+    mytext = file.read()
+    
+    # Language in which you want to convert
+    language = 'en'
+    
+    # Passing the text and language to the engine, 
+    # here we have marked slow=False. Which tells 
+    # the module that the converted audio should 
+    # have a high speed
+    myobj = gTTS(text=mytext, lang=language, slow=False)
+    
+    # Saving the converted audio in a mp3 file named
+    # welcome 
+    myobj.save("welcome.mp3")
+    file.close()
+    
+    # Playing the converted file
+    os.system("mpyg321 welcome.mp3")
 
 # Function to toggle to the current team based on the current round
 def get_current_team():
