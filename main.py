@@ -44,7 +44,7 @@ def instructions():
     file.close()
     
     # Playing the converted file
-    os.system("mpyg321 welcome.mp3")
+    os.system("welcome.mp3")
 
 # Function to toggle to the current team based on the current round
 def get_current_team():
@@ -92,6 +92,8 @@ for keys in card0.answers:
 Main Game Below
 '''
 print("Welcome to Family Feud!")
+instructions()
+
 
 # Asks for the teams' names and creates a Team object using the inputs.
 first_team = Team(input("Team 1, Enter your name here: "))
