@@ -20,31 +20,6 @@ missed_answers = 0
 answer = ""
 round = 0
 
-"""def instructions():
-    '''
-    This function is used to present the game instructions to the teams. It uses Google Text to Speech API
-    to convert the text instructions into speech instructions.
-    '''
-    # The text that you want to convert to audio
-    file = open("Instructions.txt", "r")
-    mytext = file.read()
-    
-    # Language in which you want to convert
-    language = 'en'
-    
-    # Passing the text and language to the engine, 
-    # here we have marked slow=False. Which tells 
-    # the module that the converted audio should 
-    # have a high speed
-    myobj = gTTS(text=mytext, lang=language, slow=False)
-    
-    # Saving the converted audio in a mp3 file named
-    # welcome 
-    myobj.save("welcome.mp3")
-    file.close()
-    
-    # Playing the converted file
-    os.system("welcome.mp3")"""
 
 def instructions():
     """
@@ -102,6 +77,7 @@ for keys in card0.answers:
 Main Game Below
 '''
 print("Welcome to Family Feud!")
+print()
 instructions()
 
 # Asks for the teams' names and creates a Team object using the inputs.
