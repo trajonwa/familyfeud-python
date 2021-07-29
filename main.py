@@ -47,6 +47,9 @@ round = 0
     os.system("welcome.mp3")"""
 
 def instructions():
+    """
+    This function uses the instructions file to display the game rules to the teams.
+    """
     file = open("Instructions.txt", "r")
     for line in file:
         print(line)
