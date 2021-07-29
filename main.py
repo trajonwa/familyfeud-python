@@ -20,7 +20,7 @@ missed_answers = 0
 answer = ""
 round = 0
 
-def instructions():
+"""def instructions():
     '''
     This function is used to present the game instructions to the teams. It uses Google Text to Speech API
     to convert the text instructions into speech instructions.
@@ -44,7 +44,14 @@ def instructions():
     file.close()
     
     # Playing the converted file
-    os.system("welcome.mp3")
+    os.system("welcome.mp3")"""
+
+def instructions():
+    file = open("Instructions.txt", "r")
+    for line in file:
+        print(line)
+        sleep(2)
+    file.close()
 
 # Function to toggle to the current team based on the current round
 def get_current_team():
@@ -93,7 +100,6 @@ Main Game Below
 '''
 print("Welcome to Family Feud!")
 instructions()
-
 
 # Asks for the teams' names and creates a Team object using the inputs.
 first_team = Team(input("Team 1, Enter your name here: "))
