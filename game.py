@@ -1,0 +1,199 @@
+import os
+import random
+from time import sleep, time
+from classes import GameCard
+from classes import Board
+from classes import Team
+
+### Current Issues ###
+
+# Not sure how to handle synoynms/similar answers
+# After a card is completed, the board hasn't been cleared, I believe? So the old board for a previous card is shown on the next board
+# for the next card.
+
+'''
+Temp Data Below
+'''
+# Card 1
+
+card0 = GameCard("In Horror Movies, Name a Place Teenagers Go Where There’s Always a Killer On the Loose")
+card0.answers["CABIN"] = (49, ("CAMP", "WOODS"))
+card0.answers["GRAVEYARD"] = (12, ())
+card0.answers["MOVIE THEATRE"] = (6, ("DRIVE-IN"))
+# card0.answers["BASEMENT"] = (6, ("CELLAR"))
+# card0.answers["CLOSET"] = (5, ())
+# card0.answers["BATHROOM"] = (4, ("SHOWER"))
+# card0.answers["BEDROOM"] = (4, ("BED"))
+# card0.answers["PARTY"] = (4, ())
+
+# Card 2
+
+card1 = GameCard("Name Marvel’s Avengers")
+card1.answers["CAPTAIN AMERICA"] = (22, ())
+card1.answers["IRON MAN"] = (22, ())
+card1.answers["BLACK PANTHER"] = (20, ())
+card1.answers["THE HULK"] = (15, ())
+card1.answers["THOR"] = (15, ())
+card1.answers["BLACK WIDOW"] = (9, ())
+card1.answers["SPIDERMAN"] = (3, ())
+card1.answers["HAWKEYE"] = (3, ())
+
+# Card 3
+
+card2 = GameCard("Name a Common Candy Bar Component")
+card2.answers["CHOCOLATE"] = (36, ())
+card2.answers["PEANUTS"] = (22, ())
+card2.answers["CARAMEL"] = (15, ())
+card2.answers["ALMONDS"] = (12, ())
+card2.answers["NOUGAT"] = (10, ())
+card2.answers["COCONUT"] = (6, ())
+
+# A list of cards to help replicate generating random cards.
+list_of_cards = [card0, card1, card2]
+
+# This list just contains a list of the answers in order to print said answers instead of using the dictionary.
+list_of_answers = []
+
+class Game:
+    
+    # Constructor to create the game that takes two Team objects as arguments 
+    def __init__(self, first_team_arg, second_team_arg):
+        self.first_team = first_team_arg
+        self.second_team = second_team_arg
+        self.is_running = True
+        self.temp_score = 0
+        self.missed_answers = 0
+        self.round = 0
+        self.board = Board()
+
+    # Function to toggle to the current team based on the current round
+    def get_current_team(self):
+        players = [self.first_team, self.second_team]
+        return players[self.round % len(players)]
+
+    # Function to toggle to the next team based on the current round
+    def get_next_team(self):
+        players = [self.first_team, self.second_team]
+        return players[(self.round + 1) % len(players)]
+
+    # Function that clears the screen and shows all the game info on the screen 
+    def refresh_screen(self, duration=1.5):
+        self.clear_screen()
+        sleep(duration)
+        print(f"Round {self.round + 1}")
+        print(f"Round Score: {self.temp_score}")
+        print(f"{self.first_team.name}'s Score: {self.first_team.score} | {self.second_team.name}'s Score: {self.second_team.score}")
+        self.board.print_board()
+    
+    def clear_screen(self):
+        if os.name == 'posix':
+            _ = os.system('clear')
+        else:
+            _ = os.system('cls')
+
+    # Returns whoever has the highest score
+    def highest_score(self):
+        if self.first_team.score > self.second_team.score:
+            return self.first_team
+        elif self.second_team.score > self.first_team.score:
+            return self.second_team
+        else:
+            return "There was a tie!"
+
+    # Main Play Function
+    def play(self, first_team_arg, second_team_arg):
+
+        self.first_team = first_team_arg
+        self.second_team = second_team_arg
+
+        while self.is_running:
+
+            # for loops that does two rounds
+            for x in range(2):
+
+                # Pops a random card and makes it the current card
+                current_card = list_of_cards.pop(random.randint(0, len(list_of_cards) - 1))
+
+                # Appends each answer to the list of answers. Note that the answers are the keys to the GameCard object's dictionary.
+                for keys in current_card.answers:
+                    list_of_answers.append(keys)
+
+                # Counter to keep up with how many answers are not on the board
+                counter = len(current_card.answers)
+
+                # Builds the board using the length of the number of answers.
+                self.board.build_board(len(current_card.answers))
+
+                # gets the current team and stores the current team in a variable to be used. 
+                current_team = self.get_current_team()
+
+                while counter != 0:
+
+                    self.refresh_screen()
+                    print(current_card.question)
+                    answer = input(f"{current_team.name}, What is your answer: ")
+                    print()
+
+                    if self.missed_answers == 2:
+                        print(f"Oops, you've guessed incorrectly three times! It's {self.get_next_team().name}'s turn!")
+                        current_team = self.get_next_team() # Since the current play team missed three times, the current team is now the next team.
+                        sleep(2)
+                        break
+                    elif answer.upper() not in list_of_answers:
+                        self.missed_answers += 1
+                        print("Oops, wrong answer!")
+                        sleep(2)
+                    else:                  
+                        print("You got it!")
+                        index = list_of_answers.index(answer.upper()) # Gets the index of the answer from the list of answers and stores it.
+                        self.board.board[index] = answer.upper() + " " + str(current_card.answers[answer.upper()][0]) # stores the answer with the score on the board given the index
+                        # print(all(isinstance(item, str) for item in self.board.board))
+                        counter -= 1
+                        self.temp_score += current_card.answers[answer.upper()][0] # take the score and add it to the temporary score variable
+                        sleep(2)
+
+                self.missed_answers = 0
+
+                if counter != 0:
+                    self.refresh_screen()
+                    answer = input(f"{current_team.name}, What is your answer: ")
+                    print(current_card.question)
+
+                    if answer.upper() in list_of_answers:
+                        # If the answer is correct, like for the first team in the round, we just get the index,
+                        # then store the answer with the score on the board using that index. 
+                        # Then take the score and add it to the temporary score and give it to the stealing team.
+                        # Then we just refresh the screen say they won and reset the temporary score.
+                        index = list_of_answers.index(answer.upper())
+                        self.board.board[index] = answer.upper() + " " + str(current_card.answers[answer.upper()][0])
+                        self.temp_score += current_card.answers[answer.upper()][0]
+                        current_team.score = self.temp_score
+                        self.refresh_screen()
+                        print(f"{current_team.name} has won the round!")
+                        self.temp_score = 0
+                        self.round += 1
+                        sleep(3)
+                        continue
+                # This part is for if the list_of_answers is empty or if the stealing team got the wrong answer.
+                self.get_current_team().score = self.temp_score
+                self.refresh_screen()
+                print(f"{self.get_current_team().name} has won the round!")
+                self.temp_score = 0
+                self.round += 1
+                sleep(3)
+
+            while True:
+                answer = input("Do you want to continue playing? Press Y/y for continue and N/n to stop!").upper()
+                if(answer == "Y"):
+                    break
+                elif(answer == "N"):
+                    return self.highest_score()
+                else:
+                    print("Sorry, wrong input!")
+                    
+                    
+
+            
+
+
+            
