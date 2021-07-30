@@ -20,6 +20,11 @@ def main():
 
         if choice == "1":
             # print instructions:
+            file = open("Instructions.txt", "r")
+            for line in file:
+                print(line)
+                sleep(1)
+            file.close()
             input("Press enter to continue: ")
             clear_screen()
             continue
