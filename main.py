@@ -38,7 +38,7 @@ def main():
                 print(winner)
                 print("Thanks for playing!")
             else:
-                print(f"The winner is {winner}!"}
+                print(f"The winner is {winner}!")
                 print("Thanks for playing!")
 
         elif choice == "3":
