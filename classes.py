@@ -18,6 +18,9 @@ class Board:
         for row in self.board:
             print("[ " + "".join(row) + " ]")
 
+    def clear_board(self):
+        self.board = []
+
 class GameCard:
     def __init__(self, question):
         self.question = question

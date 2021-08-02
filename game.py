@@ -8,8 +8,12 @@ from classes import Team
 ### Current Issues ###
 
 # Not sure how to handle synoynms/similar answers
-# After a card is completed, the board hasn't been cleared, I believe? So the old board for a previous card is shown on the next board
-# for the next card.
+# Crashes at the end of the game due to lack of cards, but that's not a major concern.
+
+### Things To Implement ###
+
+# - 300 Point Limit
+# - Show all remaining answers after the round is over.
 
 '''
 Temp Data Below
@@ -17,9 +21,9 @@ Temp Data Below
 # Card 1
 
 card0 = GameCard("In Horror Movies, Name a Place Teenagers Go Where There’s Always a Killer On the Loose")
-card0.answers["CABIN"] = (49, ("CAMP", "WOODS"))
-card0.answers["GRAVEYARD"] = (12, ())
-card0.answers["MOVIE THEATRE"] = (6, ("DRIVE-IN"))
+card0.answers["CABIN"] = (20, ("CAMP", "WOODS")) # 49
+card0.answers["GRAVEYARD"] = (20, ()) # 12
+card0.answers["MOVIE THEATRE"] = (20, ("DRIVE-IN")) # 6
 # card0.answers["BASEMENT"] = (6, ("CELLAR"))
 # card0.answers["CLOSET"] = (5, ())
 # card0.answers["BATHROOM"] = (4, ("SHOWER"))
@@ -29,24 +33,24 @@ card0.answers["MOVIE THEATRE"] = (6, ("DRIVE-IN"))
 # Card 2
 
 card1 = GameCard("Name Marvel’s Avengers")
-card1.answers["CAPTAIN AMERICA"] = (22, ())
-card1.answers["IRON MAN"] = (22, ())
-card1.answers["BLACK PANTHER"] = (20, ())
-card1.answers["THE HULK"] = (15, ())
-card1.answers["THOR"] = (15, ())
-card1.answers["BLACK WIDOW"] = (9, ())
-card1.answers["SPIDERMAN"] = (3, ())
-card1.answers["HAWKEYE"] = (3, ())
+card1.answers["CAPTAIN AMERICA"] = (20, ()) # 22
+card1.answers["IRON MAN"] = (20, ()) # 22
+card1.answers["BLACK PANTHER"] = (20, ()) # 20
+# card1.answers["THE HULK"] = (15, ())
+# card1.answers["THOR"] = (15, ())
+# card1.answers["BLACK WIDOW"] = (9, ())
+# card1.answers["SPIDERMAN"] = (3, ())
+# card1.answers["HAWKEYE"] = (3, ())
 
 # Card 3
 
 card2 = GameCard("Name a Common Candy Bar Component")
-card2.answers["CHOCOLATE"] = (36, ())
-card2.answers["PEANUTS"] = (22, ())
-card2.answers["CARAMEL"] = (15, ())
-card2.answers["ALMONDS"] = (12, ())
-card2.answers["NOUGAT"] = (10, ())
-card2.answers["COCONUT"] = (6, ())
+card2.answers["CHOCOLATE"] = (20, ()) # 36
+card2.answers["PEANUTS"] = (20, ()) # 22
+card2.answers["CARAMEL"] = (20, ()) # 15
+# card2.answers["ALMONDS"] = (12, ())
+# card2.answers["NOUGAT"] = (10, ())
+# card2.answers["COCONUT"] = (6, ())
 
 # A list of cards to help replicate generating random cards.
 list_of_cards = [card0, card1, card2]
@@ -114,12 +118,19 @@ class Game:
                 # Pops a random card and makes it the current card
                 current_card = list_of_cards.pop(random.randint(0, len(list_of_cards) - 1))
 
+                # Clear the list_of_answers list for different rounds.
+                # I might make this a variable in the constructor, honestly. 
+                list_of_answers = []
+
                 # Appends each answer to the list of answers. Note that the answers are the keys to the GameCard object's dictionary.
                 for keys in current_card.answers:
                     list_of_answers.append(keys)
 
                 # Counter to keep up with how many answers are not on the board
                 counter = len(current_card.answers)
+
+                # Clear the board, definitely helps for starting different rounds.
+                self.board.clear_board()
 
                 # Builds the board using the length of the number of answers.
                 self.board.build_board(len(current_card.answers))
@@ -129,17 +140,20 @@ class Game:
 
                 while counter != 0:
 
-                    self.refresh_screen()
-                    print(current_card.question)
-                    answer = input(f"{current_team.name}, What is your answer: ")
-                    print()
-
-                    if self.missed_answers == 2:
+                    # Check to see if the playing team has ran out of guesses.
+                    if self.missed_answers == 3:
                         print(f"Oops, you've guessed incorrectly three times! It's {self.get_next_team().name}'s turn!")
                         current_team = self.get_next_team() # Since the current play team missed three times, the current team is now the next team.
                         sleep(2)
                         break
-                    elif answer.upper() not in list_of_answers:
+
+                    self.refresh_screen()
+                    print(current_card.question)
+                    print(f"Number of Guesses Left: {3 - self.missed_answers}")
+                    answer = input(f"{current_team.name}, What is your answer: ")
+                    print()
+
+                    if answer.upper() not in list_of_answers:
                         self.missed_answers += 1
                         print("Oops, wrong answer!")
                         sleep(2)
@@ -156,8 +170,8 @@ class Game:
 
                 if counter != 0:
                     self.refresh_screen()
-                    answer = input(f"{current_team.name}, What is your answer: ")
                     print(current_card.question)
+                    answer = input(f"{current_team.name}, What is your answer: ")
 
                     if answer.upper() in list_of_answers:
                         # If the answer is correct, like for the first team in the round, we just get the index,
