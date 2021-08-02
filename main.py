@@ -39,12 +39,17 @@ def main():
             game = Game(first_team, second_team)
             winner = game.play(first_team, second_team)
 
-            if winner is str():
+            if isinstance(winner, str):
                 print(winner)
                 print("Thanks for playing!")
+                input("Press enter to continue to main menu: ")
+                clear_screen()
             else:
-                print(f"The winner is {winner}!")
+                print(f"The winner is {winner.name}!")
                 print("Thanks for playing!")
+                input("Press enter to continue to main menu: ")
+                clear_screen()
+                continue
 
         elif choice == "3":
             # Add card function here
