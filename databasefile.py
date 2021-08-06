@@ -89,7 +89,7 @@ def create_tables():
     pw = input("Please enter password to access FamilyFeud Database: ")
     db = str(input("Please specify database you'd like to connect to: "))
 
-    connection = create_db_connection("odos", "%", pw, db)
+    connection = create_db_connection("DESKTOP-NQC3B1I", "odos", pw, db)
     execute_query(connection, create_questionnare)
     execute_query(connection, create_answers)
     execute_query(connection, create_score)
@@ -154,7 +154,7 @@ def fill_initial_data():
     pw = input("Please enter password to access FamilyFeud Database: ")
     db = str(input("Please specify database you'd like to connect to: "))
 
-    connection = create_db_connection("odos", "%", pw, db)
+    connection = create_db_connection("DESKTOP-NQC3B1I", "odos", pw, db)
     execute_query(connection, pop_questionnare)
     execute_query(connection, pop_answers)
     execute_query(connection, pop_score)
@@ -165,7 +165,7 @@ def intiate_database():
     password = input("Please enter password to access FamilyFeud Database: ")
     database_name = str(input("Please specify how you'd like the database to called: "))
 
-    connection = create_server_connection("odos", "%", password)
+    connection = create_server_connection("DESKTOP-NQC3B1I", "odos", password)
     query = "CREATE DATABASE " + database_name
 
     create_database(connection, query)
