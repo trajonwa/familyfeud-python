@@ -1,3 +1,5 @@
+cards = []
+
 class Board:
 
     def __init__(self):
@@ -25,6 +27,7 @@ class GameCard:
     def __init__(self, question):
         self.question = question
         self.answers = {}
+        cards.append(self)
 
 class Team:
     def __init__(self, name):

@@ -1,7 +1,8 @@
 import os
 from game import Game
-from time import sleep, time
+from time import sleep
 from classes import Team
+import addcards
 
 def clear_screen():
         if os.name == 'posix':
@@ -52,7 +53,8 @@ def main():
                 continue
 
         elif choice == "3":
-            # Add card function here
+            clear_screen()
+            addcards.add_card()
             sleep(1.5)
             clear_screen()
             continue
