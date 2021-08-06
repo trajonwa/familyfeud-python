@@ -1,3 +1,5 @@
+# Variable that contains all the cards for the game
+# A card is automatically added to this list when it is created
 cards = []
 
 class Board:

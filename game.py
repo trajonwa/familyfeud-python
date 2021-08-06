@@ -1,24 +1,26 @@
 import os
 import random
+import classes
 from time import sleep, time
 from classes import GameCard
 from classes import Board
 from classes import Team
-import classes
 
+'''
 ### Current Issues ###
 
-# Not sure how to handle synoynms/similar answers
-# Crashes at the end of the game due to lack of cards, but that's not a major concern.
+- Not sure how to handle synoynms/similar answers
+- Game may crash when it runs out of cards. Will fix this soon.
 
 ### Things To Implement ###
+- Show all remaining answers after the round is over.
 
-# - 300 Point Limit
-# - Show all remaining answers after the round is over.
+'''
 
 '''
 Temp Data Below
 '''
+
 # Card 1
 
 card0 = GameCard("In Horror Movies, Name a Place Teenagers Go Where There’s Always a Killer On the Loose")
