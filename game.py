@@ -9,17 +9,19 @@ from classes import Team
 '''
 ### Current Issues ###
 
-- Not sure how to handle synoynms/similar answers
 - Game may crash when it runs out of cards. Will fix this soon.
 
 ### Things To Implement ###
 - Show all remaining answers after the round is over.
 
-'''
+### Fixed - 8/10 ###
+- Implemented a solution to look for similar answers
+- Fixed the bug where it allows users to put the same answer twice or more
 
 '''
-Temp Data Below
-'''
+
+
+# Temp Data Below
 
 # Card 1
 
@@ -34,7 +36,7 @@ card0.answers["BEDROOM"] = (4, {"BED"})
 card0.answers["PARTY"] = (4, {})
 
 # Card 2
-
+'''
 card1 = GameCard("Name Marvel’s Avengers")
 card1.answers["CAPTAIN AMERICA"] = (22, {})
 card1.answers["IRON MAN"] = (22, {})
@@ -99,6 +101,7 @@ card6.answers["GREENLAND"] = (5, {})
 card6.answers["MEXICO"] = (4, {})
 card6.answers["AUSTRALIA"] = (4, {})
 card6.answers["INDIA"] = (2, {})
+'''
 
 # A list of cards to help replicate generating random cards.
 list_of_cards = classes.cards
@@ -204,20 +207,29 @@ class Game:
                     self.refresh_screen()
                     print(current_card.question)
                     print(f"Number of Guesses Left: {3 - self.missed_answers}")
-                    answer = input(f"{current_team.name}, What is your answer: ")
+                    answer = input(f"{current_team.name}, What is your answer: ").upper()
                     print()
+                    
+                    for answers in dict.values(current_card.answers):
+                        # Checks for similar answers
+                        if answer in answers[1]:
+                            for key, value in dict.items(current_card.answers):
+                                if value == answers:
+                                    answer = key.upper()
+                                    break
+                            break
 
-                    if answer.upper() not in list_of_answers:
+                    if answer not in list_of_answers:
                         self.missed_answers += 1
                         print("Oops, wrong answer!")
                         sleep(2)
                     else:                  
                         print("You got it!")
-                        index = list_of_answers.index(answer.upper()) # Gets the index of the answer from the list of answers and stores it.
-                        self.board.board[index] = answer.upper() + " " + str(current_card.answers[answer.upper()][0]) # stores the answer with the score on the board given the index
-                        # print(all(isinstance(item, str) for item in self.board.board))
+                        index = list_of_answers.index(answer) # Gets the index of the answer from the list of answers and stores it.
+                        self.board.board[index] = answer + " " + str(current_card.answers[answer][0]) # stores the answer with the score on the board given the index
                         counter -= 1
-                        self.temp_score += current_card.answers[answer.upper()][0] # take the score and add it to the temporary score variable
+                        list_of_answers[index] = ""
+                        self.temp_score += current_card.answers[answer][0] # take the score and add it to the temporary score variable
                         sleep(2)
 
                 self.missed_answers = 0
@@ -225,16 +237,25 @@ class Game:
                 if counter != 0:
                     self.refresh_screen()
                     print(current_card.question)
-                    answer = input(f"{current_team.name}, What is your answer: ")
+                    answer = input(f"{current_team.name}, What is your answer: ").upper()
 
-                    if answer.upper() in list_of_answers:
+                    for answers in dict.values(current_card.answers):
+                        # Checks for similar answers
+                        if answer in answers[1]:
+                            for key, value in dict.items(current_card.answers):
+                                if value == answers:
+                                    answer = key.upper()
+                                    break
+                            break
+
+                    if answer in list_of_answers:
                         # If the answer is correct, like for the first team in the round, we just get the index,
                         # then store the answer with the score on the board using that index. 
                         # Then take the score and add it to the temporary score and give it to the stealing team.
                         # Then we just refresh the screen say they won and reset the temporary score.
-                        index = list_of_answers.index(answer.upper())
-                        self.board.board[index] = answer.upper() + " " + str(current_card.answers[answer.upper()][0])
-                        self.temp_score += current_card.answers[answer.upper()][0]
+                        index = list_of_answers.index(answer)
+                        self.board.board[index] = answer + " " + str(current_card.answers[answer][0])
+                        self.temp_score += current_card.answers[answer][0]
                         current_team.score += self.temp_score
                         self.refresh_screen()
                         print(f"{current_team.name} has won the round!")
