@@ -426,7 +426,7 @@ while True:  # Event Loop
 
         for ans in range(num_ans):
 
-            temp_list = [[values[f'-SUBMITTED_ANSWER{ans + 1}-'], int(values[f'-SUBMITTED_SCORE{ans + 1}-'])]]
+            temp_list = [values[f'-SUBMITTED_ANSWER{ans + 1}-'], int(values[f'-SUBMITTED_SCORE{ans + 1}-'])]
             list_of_new_answers.append(temp_list)
 
         add_card(question, list_of_new_answers)
