@@ -74,16 +74,18 @@ def make_window4(num_answer=3):
         [sg.Text('*** Score 0',
                  font=("Arial", 12),
                  key='-TEAM1_SCORE-',
-                 size=(10, 1)),
+                 size=(15, 1)),
          sg.Text('Round score: 0',
                  font=("Arial", 12),
-                 key='-ROUNDSCORE-'),
+                 key='-ROUNDSCORE-',
+                 size=(15, 1)),
          sg.Text('*** Score 0',
                  font=("Arial", 12),
                  key='-TEAM2_SCORE-',
-                 size=(10, 1))],
+                 size=(15, 1))],
         [sg.Text('*** have *** remaining tries',
-                 key='-TRIAL-')]]
+                 key='-TRIAL-',
+                 size=(30, 1))]]
     if num_answer % 2 == 0:
         num_answer = num_answer // 2
     else:
@@ -196,217 +198,220 @@ def wrong_ans(num_wrong):
 
 
 # start off with 1 window open
-def gui_code():
-    while True:  # Event Loop
-        window, event, values = sg.read_all_windows()
-        if event == sg.WIN_CLOSED or event == 'Exit':
-            window.close()
-            if window == window2:  # if closing win 2, mark as closed
-                window2 = None
-            elif window == window1:  # if closing win 1, exit program
-                break
-        elif event == '-VIEW_INSTRUCTIONS-':
-            window2 = make_window2()
+window1, window2, window3, window4, \
+    window5, window6, window7, window8 = make_window1(), None, None, None, None, None, None, None
 
-        elif event == '-EXIT_INSTRUCTIONS-':
-            window2.close()
-        elif event == '-PLAY_GAME-':
-            window3 = make_window3()
-        elif event == '-GAME_ANSWER-':
+while True:  # Event Loop
+    window, event, values = sg.read_all_windows()
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        window.close()
+        if window == window2:  # if closing win 2, mark as closed
+            window2 = None
+        elif window == window1:  # if closing win 1, exit program
+            break
+    elif event == '-VIEW_INSTRUCTIONS-':
+        window2 = make_window2()
 
-            answer = values['-QUESTION_ANS-']
-            list_of_answers = []
-            print(game_instance.round)
+    elif event == '-EXIT_INSTRUCTIONS-':
+        window2.close()
+    elif event == '-PLAY_GAME-':
+        window3 = make_window3()
+    elif event == '-GAME_ANSWER-':
 
-            for keys in current_card.answers:
-                list_of_answers.append(keys)
+        answer = values['-QUESTION_ANS-']
+        list_of_answers = []
 
-            window4['-QUESTION_ANS-'].update('')
+        for keys in current_card.answers:
+            list_of_answers.append(keys)
 
-            if (answer.upper() not in list_of_answers) and (steal is False):
-                print(str(steal) + " Hahaha")
+        window4['-QUESTION_ANS-'].update('')
 
-                game_instance.missed_answers += 1
-                window4['-TRIAL-'].update(f'{current_team.name} have {3 - game_instance.missed_answers} remaining tries')
+        if (answer.upper() not in list_of_answers) and (steal is False):
+            print(str(steal) + " Hahaha")
 
-                if game_instance.missed_answers == 1:
+            game_instance.missed_answers += 1
+            window4['-TRIAL-'].update(f'{current_team.name} have {3 - game_instance.missed_answers} remaining tries')
 
-                    random_window = wrong_ans(1)
-                    random_window.bring_to_front()
+            if game_instance.missed_answers == 1:
+
+                random_window = wrong_ans(1)
+                random_window.bring_to_front()
+                time.sleep(1)
+                random_window.close()
+
+            if game_instance.missed_answers == 2:
+
+                random_window = wrong_ans(2)
+                random_window.bring_to_front()
+                time.sleep(1)
+                random_window.close()
+
+            if game_instance.missed_answers == 3:
+
+                game_instance.missed_answers = 0
+                steal = True
+                print('steal changed ' + str(steal))
+                current_team = game_instance.get_next_team()
+                random_window = wrong_ans(3)
+                random_window.bring_to_front()
+                time.sleep(1)
+                random_window.close()
+                window4['-TRIAL-'].update(
+                    f'{current_team.name} you got 1 guess to steal!')
+
+        elif steal:
+
+            if answer.upper() not in list_of_answers:
+
+                if current_team == first_team:
+
+                    window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {game_instance.temp_score}")
+                    second_team.score = game_instance.temp_score
+                    game_instance.temp_score = 0
+
+                elif current_team == second_team:
+
+                    window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {game_instance.temp_score}")
+                    first_team.score = game_instance.temp_score
+                    game_instance.temp_score = 0
+
+            else:
+
+                if current_team == first_team:
+
+                    window4['-TEAM1_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
+                    first_team.score = game_instance.temp_score
+                    game_instance.temp_score = 0
+
+                elif current_team == second_team:
+
+                    window4['-TEAM2_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
+                    second_team.score = game_instance.temp_score
+                    game_instance.temp_score = 0
+
+            game_round += 1
+            steal = False
+            current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+            temp_window4 = make_window4(len(current_card.answers))
+            temp_window4.hide()
+            time.sleep(1)
+            window4.close()
+            temp_window4.un_hide()
+            window4 = temp_window4
+            window4['-GAME_QUESTION-'].update(f'{current_card.question}')
+            window4['-TRIAL-'].update(f'{current_team.name} you got 3 guesses left!')
+            window4['-ROUNDSCORE-'].update(f'Round score: 0')
+            window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {first_team.score}")
+            window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {second_team.score}")
+
+        elif (answer.upper() in list_of_answers) and (steal is False):
+
+            index = list_of_answers.index(answer.upper())
+            print(str(index) + ' game index')
+            game_instance.temp_score += current_card.answers[answer.upper()][0]
+            window4['-HIDDEN_ANS' + str(index + 1) + '-'].update(
+                answer.upper() + " " + str(current_card.answers[answer.upper()][0]))
+            window4['-ROUNDSCORE-'].update(f'Round score: {game_instance.temp_score}')
+
+            if (num_of_correct_ans == len(list_of_answers) - 1) and (game_round == 2):
+
+                highest_score = game_instance.highest_score()
+                game_instance.round += 1
+                game_round = 1
+
+                if type(highest_score) is str:
+
                     time.sleep(1)
-                    random_window.close()
-
-                if game_instance.missed_answers == 2:
-
-                    random_window = wrong_ans(2)
-                    random_window.bring_to_front()
-                    time.sleep(1)
-                    random_window.close()
-
-                if game_instance.missed_answers == 3:
-
-                    game_instance.missed_answers = 0
-                    steal = True
-                    print('steal changed ' + str(steal))
-                    current_team = game_instance.get_next_team()
-                    random_window = wrong_ans(3)
-                    random_window.bring_to_front()
-                    time.sleep(1)
-                    random_window.close()
-                    window4['-TRIAL-'].update(
-                        f'{current_team.name} you got {3 - game_instance.missed_answers} guesses left!')
-
-            elif steal:
-
-                if answer.upper() not in list_of_answers:
-
-                    if current_team == first_team:
-
-                        window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {game_instance.temp_score}")
-                        game_instance.temp_score = 0
-
-                    elif current_team == second_team:
-
-                        window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {game_instance.temp_score}")
-                        game_instance.temp_score = 0
+                    window4.close()
+                    window5 = make_window5()
+                    window5['-WINNER-'].update(f'There was a tie')
 
                 else:
+                    time.sleep(1)
+                    window4.close()
+                    window5 = make_window5()
+                    window5['-WINNER-'].update(f'The winner is {current_team.name}')
 
-                    if current_team == first_team:
+            elif num_of_correct_ans == len(list_of_answers) - 1:
 
-                        window4['-TEAM1_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
-                        game_instance.temp_score = 0
-
-                    elif current_team == second_team:
-
-                        window4['-TEAM2_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
-                        game_instance.temp_score = 0
-
+                print(str(index) + ' game index')
                 game_round += 1
-                steal = False
                 current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
-                temp_window4 = make_window4(len(current_card.answers))
-                temp_window4.hide()
-                time.sleep(1)
+
+                if current_team == first_team:
+                    window4['-TEAM1_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
+                    first_team.score = game_instance.temp_score
+                    print(str(first_team.score) + "team score")
+                    game_instance.temp_score = 0
+                elif current_team == second_team:
+                    window4['-TEAM2_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
+                    second_team.score = game_instance.temp_score
+                    print(str(second_team.score) + "team score")
+                    game_instance.temp_score = 0
+
+                time.sleep(2)
                 window4.close()
-                temp_window4.un_hide()
-                window4 = temp_window4
+                current_team = game_instance.get_next_team()
+                window4 = make_window4(len(current_card.answers))
                 window4['-GAME_QUESTION-'].update(f'{current_card.question}')
                 window4['-TRIAL-'].update(f'{current_team.name} you got 3 guesses left!')
                 window4['-ROUNDSCORE-'].update(f'Round score: 0')
                 window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {first_team.score}")
                 window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {second_team.score}")
 
-            elif (answer.upper() in list_of_answers) and (steal is False):
+            num_of_correct_ans += 1
 
-                index = list_of_answers.index(answer.upper())
-                print(str(index) + ' game index')
-                game_instance.temp_score += current_card.answers[answer.upper()][0]
-                window4['-HIDDEN_ANS' + str(index + 1) + '-'].update(
-                    answer.upper() + " " + str(current_card.answers[answer.upper()][0]))
-                window4['-ROUNDSCORE-'].update(f'Round score: {game_instance.temp_score}')
+        print(str(game_round) + " game round")
+        print(str(game_instance.round) + "game instance round")
 
-                if (num_of_correct_ans == len(list_of_answers) - 1) and (game_round == 2):
+    elif event == '-TEAM_INFO-':
+        if (values['-TEAM1-'] != '') and values['-TEAM2-'] != '':
 
-                    highest_score = game_instance.highest_score()
-                    game_instance.round += 1
-                    game_round = 1
-                    
-                    if type(highest_score) is str:
+            first_team = Team(values['-TEAM1-'])
+            second_team = Team(values['-TEAM2-'])
+            steal = False
+            num_of_correct_ans = 0
+            game_round = 1
+            game_instance = Game(first_team, second_team)
 
-                        time.sleep(1)
-                        window4.close()
-                        window5 = make_window5()
-                        window5['-WINNER-'].update(f'There was a tie')
+            current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+            current_team = game_instance.get_current_team()
 
-                    else:
-                        time.sleep(1)
-                        window4.close()
-                        window5 = make_window5()
-                        window5['-WINNER-'].update(f'The winner is {current_team.name}')
+            window3.close()
+            window4 = make_window4(len(current_card.answers))
 
-                elif num_of_correct_ans == len(list_of_answers) - 1:
+            window4['-GAME_QUESTION-'].update(f'{current_card.question}')
+            window4['-TRIAL-'].update(f'{current_team.name} you got 3 guesses left!')
+            window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {first_team.score}")
+            window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {second_team.score}")
 
-                    print(str(index) + ' game index')
-                    game_round += 1
-                    current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+        else:
+            window3['-TEAM_INVALID-'].update('          Please fill both fields!')    
+    elif event == '-ADD_CARDS-':
+        window6 = make_window6()
+    elif event == '-QUESTION_SUBMITTED-':
 
-                    if current_team == first_team:
-                        window4['-TEAM1_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
-                        first_team.score = game_instance.temp_score
-                        print(str(first_team.score) + "team score")
-                        game_instance.temp_score = 0
-                    elif current_team == second_team:
-                        window4['-TEAM2_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
-                        second_team.score = game_instance.temp_score
-                        print(str(second_team.score) + "team score")
-                        game_instance.temp_score = 0
+        question = values['-NEW_QUESTION-']
+        num_ans = values['-ANSWER_NUMBER-']
+        window6.close()
+        window7 = make_window7(num_ans)
 
-                    time.sleep(2)
-                    window4.close()
-                    current_team = game_instance.get_next_team()
-                    window4 = make_window4(len(current_card.answers))
-                    window4['-GAME_QUESTION-'].update(f'{current_card.question}')
-                    window4['-TRIAL-'].update(f'{current_team.name} you got 3 guesses left!')
-                    window4['-ROUNDSCORE-'].update(f'Round score: 0')
-                    window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {first_team.score}")
-                    window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {second_team.score}")
+    elif event == '-ANSWER_SCORE-':
 
-                num_of_correct_ans += 1
+        list_of_new_answers = []
 
-        elif event == '-TEAM_INFO-':
-            if (values['-TEAM1-'] != '') and values['-TEAM2-'] != '':
+        for ans in range(num_ans):
 
-                first_team = Team(values['-TEAM1-'])
-                second_team = Team(values['-TEAM2-'])
-                steal = False
-                num_of_correct_ans = 0
-                game_round = 1
-                game_instance = Game(first_team, second_team)
+            temp_list = [[values[f'-SUBMITTED_ANSWER{ans + 1}-'], values[f'-SUBMITTED_SCORE{ans + 1}']]]
+            list_of_new_answers.append(temp_list)
 
-                current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
-                current_team = game_instance.get_current_team()
+        add_card(question, list_of_new_answers)
 
-                window3.close()
-                window4 = make_window4(len(current_card.answers))
+    elif event == '-CONTINUE_GAME-':
+        window5.close()
+        window3 = make_window3()
+    elif event == '-END_GAME-':
+        break
 
-                window4['-GAME_QUESTION-'].update(f'{current_card.question}')
-                window4['-TRIAL-'].update(f'{current_team.name} you got 3 guesses left!')
-                window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {first_team.score}")
-                window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {second_team.score}")
+window.close()
 
-            else:
-                window3['-TEAM_INVALID-'].update('          Please fill both fields!')    
-        elif event == '-ADD_CARDS-':
-            window6 = make_window6()
-        elif event == '-QUESTION_SUBMITTED-':
-            
-            question = values['-NEW_QUESTION-']
-            num_ans = values['-ANSWER_NUMBER-']
-            window6.close()
-            window7 = make_window7(num_ans)
-            
-        elif event == '-ANSWER_SCORE-':
-            
-            list_of_new_answers = []
-            
-            for ans in range(num_ans):
-                
-                temp_list = [[values[f'-SUBMITTED_ANSWER{ans + 1}-'], values[f'-SUBMITTED_SCORE{ans + 1}']]]
-                list_of_new_answers.append(temp_list)
-
-            add_card(question, list_of_new_answers)
-            
-        elif event == '-CONTINUE_GAME-':
-            window5.close()
-            window3 = make_window3()
-        elif event == '-END_GAME-':
-            break
-
-    window.close()
-
-
-if __name__ == '__main__':
-    window1, window2, window3, window4, \
-    window5, window6, window7, window8 = make_window1(), None, None, None, None, None, None, None
-    gui_code()
