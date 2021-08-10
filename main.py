@@ -4,6 +4,7 @@ from time import sleep
 from classes import Team
 import addcards
 
+
 def clear_screen():
         if os.name == 'posix':
             _ = os.system('clear')
@@ -11,6 +12,7 @@ def clear_screen():
             _ = os.system('cls')
 
 def main():
+    
     while True:
         print("Welcome to Family Feud!")
         print("Type a number for what you would like to do!")
