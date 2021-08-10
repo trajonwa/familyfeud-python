@@ -66,5 +66,4 @@ def main():
             clear_screen()
             continue
 
-if __name__ == '__main__':
-    main()
+
