@@ -27,7 +27,20 @@ def clear_screen():
             _ = os.system('cls')
 
 # Function to add a new card to the game.
-def add_card():
+def add_card(question, list_of_answers):
+
+    card = classes.GameCard(question)
+
+    for ans_list in list_of_answers:
+        all_answers = ans_list[0].split("/")
+        set_of_similar_answers = set()
+        
+        if(len(all_answers) > 1):
+            set_of_similar_answers = set(all_answers[1:])
+        
+        card.answers[all_answers[0]] = (ans_list[1], set_of_similar_answers)
+
+    '''
     while True:
         clear_screen()
         choice = input("Enter 1 to add a Card. Enter 2 to see all Cards. Enter 3 to Return to Main Menu: ")
@@ -84,4 +97,4 @@ def add_card():
         else:
             print("Wrong input")
             continue
-            
+    '''        
