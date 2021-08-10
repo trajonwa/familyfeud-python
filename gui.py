@@ -260,8 +260,30 @@ while True:  # Event Loop
                     f'{current_team.name} you got 1 guess to steal!')
 
         elif steal:
+            steal = False
+            if game_round == 2:
 
-            if answer.upper() not in list_of_answers:
+                if answer.upper() in list_of_answers:
+
+                    game_instance.temp_score += current_card.answers[answer.upper()][0]
+
+                highest_score = game_instance.highest_score()
+                game_round = 1
+
+                if type(highest_score) is str:
+
+                    time.sleep(1)
+                    window4.close()
+                    window5 = make_window5()
+                    window5['-WINNER-'].update(f'There was a tie')
+
+                else:
+                    time.sleep(1)
+                    window4.close()
+                    window5 = make_window5()
+                    window5['-WINNER-'].update(f'The winner is {current_team.name}')
+
+            elif answer.upper() not in list_of_answers:
 
                 if current_team == first_team:
 
@@ -277,6 +299,8 @@ while True:  # Event Loop
 
             else:
 
+                game_instance.temp_score += current_card.answers[answer.upper()][0]
+
                 if current_team == first_team:
 
                     window4['-TEAM1_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
@@ -290,6 +314,7 @@ while True:  # Event Loop
                     game_instance.temp_score = 0
 
             game_round += 1
+            #game_instance.round += 1
             steal = False
             current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
             temp_window4 = make_window4(len(current_card.answers))
@@ -307,16 +332,18 @@ while True:  # Event Loop
         elif (answer.upper() in list_of_answers) and (steal is False):
 
             index = list_of_answers.index(answer.upper())
-            print(str(index) + ' game index')
             game_instance.temp_score += current_card.answers[answer.upper()][0]
+            num_of_correct_ans += 1
+            print(str(num_of_correct_ans) + " this is correct answer")
+
             window4['-HIDDEN_ANS' + str(index + 1) + '-'].update(
                 answer.upper() + " " + str(current_card.answers[answer.upper()][0]))
             window4['-ROUNDSCORE-'].update(f'Round score: {game_instance.temp_score}')
 
-            if (num_of_correct_ans == len(list_of_answers) - 1) and (game_round == 2):
+            if (num_of_correct_ans == len(list_of_answers)) and (game_round == 2):
 
                 highest_score = game_instance.highest_score()
-                game_instance.round += 1
+                num_of_correct_ans = 0
                 game_round = 1
 
                 if type(highest_score) is str:
@@ -330,23 +357,25 @@ while True:  # Event Loop
                     time.sleep(1)
                     window4.close()
                     window5 = make_window5()
+                    print(str(highest_score) + " is highest score")
                     window5['-WINNER-'].update(f'The winner is {current_team.name}')
 
-            elif num_of_correct_ans == len(list_of_answers) - 1:
+            elif num_of_correct_ans == len(list_of_answers):
 
-                print(str(index) + ' game index')
                 game_round += 1
+                num_of_correct_ans = 0
                 current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
 
                 if current_team == first_team:
+
                     window4['-TEAM1_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
                     first_team.score = game_instance.temp_score
-                    print(str(first_team.score) + "team score")
                     game_instance.temp_score = 0
+
                 elif current_team == second_team:
+
                     window4['-TEAM2_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
                     second_team.score = game_instance.temp_score
-                    print(str(second_team.score) + "team score")
                     game_instance.temp_score = 0
 
                 time.sleep(2)
@@ -358,11 +387,6 @@ while True:  # Event Loop
                 window4['-ROUNDSCORE-'].update(f'Round score: 0')
                 window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {first_team.score}")
                 window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {second_team.score}")
-
-            num_of_correct_ans += 1
-
-        print(str(game_round) + " game round")
-        print(str(game_instance.round) + "game instance round")
 
     elif event == '-TEAM_INFO-':
         if (values['-TEAM1-'] != '') and values['-TEAM2-'] != '':
@@ -392,7 +416,7 @@ while True:  # Event Loop
     elif event == '-QUESTION_SUBMITTED-':
 
         question = values['-NEW_QUESTION-']
-        num_ans = values['-ANSWER_NUMBER-']
+        num_ans = int(values['-ANSWER_NUMBER-'])
         window6.close()
         window7 = make_window7(num_ans)
 
@@ -402,7 +426,7 @@ while True:  # Event Loop
 
         for ans in range(num_ans):
 
-            temp_list = [[values[f'-SUBMITTED_ANSWER{ans + 1}-'], values[f'-SUBMITTED_SCORE{ans + 1}']]]
+            temp_list = [[values[f'-SUBMITTED_ANSWER{ans + 1}-'], int(values[f'-SUBMITTED_SCORE{ans + 1}-'])]]
             list_of_new_answers.append(temp_list)
 
         add_card(question, list_of_new_answers)
