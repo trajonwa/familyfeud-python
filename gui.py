@@ -135,6 +135,7 @@ def make_window5():
         [sg.Image(r'game.PNG')],
         [sg.Text('The winner is ****', size=(15, 1), key='-WINNER-')],
         [sg.Text('Do you want to play again?')],
+        [sg.Text('', key='-NO_CARDS-', size=(None, 1), text_color='#F07610')],
         [sg.Button('YES', key='-CONTINUE_GAME-'), sg.Button('NO', key='-END_GAME-')]]
 
     return sg.Window('Game Over', layout, element_justification='center',
@@ -211,6 +212,8 @@ def wrong_ans(num_wrong):
         ]
     return sg.Window("", layout, element_justification='center',
                      finalize=True, background_color='white', no_titlebar=True)
+
+
 
 def gui_game_logic():
     while True:  # Event Loop
@@ -327,7 +330,22 @@ def gui_game_logic():
                 else:
 
                     answers_displayed = set()
-                    current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+                    try:
+
+                        current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+
+                    except ValueError:
+
+                        sg.popup_auto_close('Our fault ! Please add a cards to continue 🥺')
+                        window4.hide()
+                        window6 = make_window6()
+                        window6.bring_to_front()
+                        added_card = True
+
+                    if added_card is True:
+                        window4.un_hide()
+                        current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+                        added_card = False
                     temp_window4 = make_window4(len(current_card.answers))
                     temp_window4.hide()
                     time.sleep(2)
@@ -382,7 +400,23 @@ def gui_game_logic():
                         time.sleep(2)
                         current_team = game_instance.get_next_team()
                         answers_displayed = set()
-                        current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+                        try:
+
+                            current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+
+                        except ValueError:
+
+                            sg.popup_auto_close('Our fault ! Please add a cards to continue 🥺')
+                            window4.hide()
+                            window6 = make_window6()
+                            window6.bring_to_front()
+                            added_card = True
+
+                        if added_card is True:
+                            window4.un_hide()
+                            current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+                            added_card = False
+                            
                         game_instance.temp_score = 0
                         window4 = make_window4(len(current_card.answers))
                         window4['-GAME_QUESTION-'].update(f'{current_card.question}')
@@ -413,6 +447,7 @@ def gui_game_logic():
             if (values['-TEAM1-'] != '') and values['-TEAM2-'] != '':
 
                 steal = False
+                added_card = False
                 first_team = Team(values['-TEAM1-'])
                 answers_displayed = set()
                 second_team = Team(values['-TEAM2-'])
@@ -508,15 +543,22 @@ def gui_game_logic():
                 window7.close()
 
         elif event == '-CONTINUE_GAME-':
-            window5.close()
-            window3 = make_window3()
+
+            try:
+
+                window3 = make_window3()
+                window5.close()
+
+            except ValueError:
+
+                window5['-NO_CARDS'].update('Our fault ! Please add a card to continue 🥺')
+                time.sleep(2)
+                window5.close()
 
         elif event == '-END_GAME-':
             break
 
     window.close()
-
-
 
 if __name__ == "__main__":
     window1, window2, window3, window4, \
