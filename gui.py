@@ -66,51 +66,63 @@ def make_window4(num_answer=3):
     """
 
     odd = False
+    buttons_left = []
+    buttons_right = []
     layout = [
         [sg.Image(r'family.PNG')],
-        [sg.Text(size=(30, 3),
-                 key='-GAME_QUESTION-',
+        [sg.Text(key='-GAME_QUESTION-',
                  font=("Arial", 15),
-                 text_color='#F07610')],
+                 text_color='#F07610',
+                 size=(30, None),
+                 justification='center')],
         [sg.Text('*** Score 0',
                  font=("Arial", 12),
                  key='-TEAM1_SCORE-',
-                 size=(15, 1)),
+                 size=(15, 1),
+                 justification='right'),
          sg.Text('Round score: 0',
                  font=("Arial", 12),
                  key='-ROUNDSCORE-',
-                 size=(15, 1)),
+                 size=(15, 1),
+                 justification='center'),
          sg.Text('*** Score 0',
                  font=("Arial", 12),
                  key='-TEAM2_SCORE-',
-                 size=(15, 1))],
+                 size=(15, 1),
+                 justification='left')],
         [sg.Text('*** have *** remaining tries',
                  key='-TRIAL-',
-                 size=(30, 1))]]
+                 size=(30, 1),
+                 justification='center')]]
     if num_answer % 2 == 0:
         num_answer = num_answer // 2
     else:
         num_answer = (num_answer // 2)
         odd = True
     for gui_ans in range(num_answer):
-        layout.append([sg.Button(str(gui_ans + 1),
-                                 font=("Arial", 25),
-                                 key='-HIDDEN_ANS' + str(gui_ans + 1) + '-'),
-                       sg.Button(str(gui_ans + num_answer + 1),
-                                 font=("Arial", 25),
-                                 key='-HIDDEN_ANS' + str(gui_ans + num_answer + 1) + '-')])
+
+        buttons_left.append([sg.Button(str(gui_ans + 1),
+                                       font=("Arial", 15),
+                                       key='-HIDDEN_ANS' + str(gui_ans + 1) + '-', )])
+
+        buttons_right.append([sg.Button(str(gui_ans + num_answer + 1),
+                                        font=("Arial", 15),
+                                        key='-HIDDEN_ANS' + str(gui_ans + num_answer + 1) + '-')])
 
     if odd:
-        layout.append([sg.Button(str(num_answer + num_answer + 1),
-                                 font=("Arial", 25),
-                                 key='-HIDDEN_ANS' + str(num_answer + num_answer + 1) + '-')])
+        buttons_right.append([sg.Button(str(num_answer + num_answer + 1),
+                                        font=("Arial", 15),
+                                        key='-HIDDEN_ANS' + str(num_answer + num_answer + 1) + '-')])
 
+    layout.append([sg.Column(buttons_left, element_justification='right'),
+                  sg.Column(buttons_right, element_justification='left')])
     layout.append([sg.Text('Please enter your answer for the question')])
     layout.append([sg.Input(key='-QUESTION_ANS-', enable_events=True)])
+    layout.append([sg.Text('', key='-ANSWER_PRESENT-', text_color='red', size=(None, 1))])
     layout.append([sg.Button('Submit Answer', key='-GAME_ANSWER-')])
 
     return sg.Window('Main Game', layout, element_justification='center',
-                     modal=True, finalize=True, grab_anywhere=True, no_titlebar=True, size=(550, 720))
+                     modal=True, finalize=True, grab_anywhere=True)
 
 
 def make_window5():
@@ -140,7 +152,7 @@ def make_window6():
         [sg.Text('Enter question: '), sg.Input(key='-NEW_QUESTION-', size=(20, 10))],
         [sg.Text('How many answers do you want to put? (4-8 answers only)'),
          sg.Input(key='-ANSWER_NUMBER-', size=(10, 10))],
-        [sg.Text('', size=(20, 1), key= '-INVALID_WINDOW6-', text_color='red')],
+        [sg.Text('', size=(20, 1), key='-INVALID_WINDOW6-', text_color='red')],
         [sg.Button('Submit Card', key='-QUESTION_SUBMITTED-')]]
     return sg.Window('Add Card', layout, element_justification='center',
                      modal=True, finalize=True, grab_anywhere=True)
@@ -200,7 +212,6 @@ def wrong_ans(num_wrong):
     return sg.Window("", layout, element_justification='center',
                      finalize=True, background_color='white', no_titlebar=True)
 
-
 def gui_game_logic():
     while True:  # Event Loop
         window, event, values = sg.read_all_windows()
@@ -233,7 +244,8 @@ def gui_game_logic():
                 print(str(steal) + " Hahaha")
 
                 game_instance.missed_answers += 1
-                window4['-TRIAL-'].update(f'{current_team.name} you have {3 - game_instance.missed_answers} remaining tries')
+                window4['-TRIAL-'].update(
+                    f'{current_team.name} you have {3 - game_instance.missed_answers} remaining tries')
 
                 if game_instance.missed_answers == 1:
 
@@ -265,7 +277,7 @@ def gui_game_logic():
 
             elif steal:
 
-                if answer.upper() in list_of_answers:
+                if (answer.upper() in list_of_answers) and (answer.upper() not in answers_displayed):
 
                     game_instance.temp_score += current_card.answers[answer.upper()][0]
 
@@ -314,6 +326,7 @@ def gui_game_logic():
 
                 else:
 
+                    answers_displayed = set()
                     current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
                     temp_window4 = make_window4(len(current_card.answers))
                     temp_window4.hide()
@@ -329,12 +342,21 @@ def gui_game_logic():
 
                 game_instance.round += 1
                 steal = False
+            elif answer.upper() in answers_displayed:
+
+                window4['-ANSWER_PRESENT-'].update('Sorry, that answer is on the board!')
+                game_instance.missed_answers += 1
+                window4['-TRIAL-'].update(
+                    f'{current_team.name} you have {3 - game_instance.missed_answers} remaining tries')
 
             elif answer.upper() in list_of_answers:
 
                 num_of_correct_ans += 1
+                answers_displayed.add(answer.upper())
                 index = list_of_answers.index(answer.upper())
                 game_instance.temp_score += current_card.answers[answer.upper()][0]
+
+                window4['-ANSWER_PRESENT-'].update('')
 
                 if num_of_correct_ans != len(list_of_answers):
 
@@ -359,6 +381,7 @@ def gui_game_logic():
 
                         time.sleep(2)
                         current_team = game_instance.get_next_team()
+                        answers_displayed = set()
                         current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
                         game_instance.temp_score = 0
                         window4 = make_window4(len(current_card.answers))
@@ -391,6 +414,7 @@ def gui_game_logic():
 
                 steal = False
                 first_team = Team(values['-TEAM1-'])
+                answers_displayed = set()
                 second_team = Team(values['-TEAM2-'])
                 num_of_correct_ans = 0
                 game_instance = Game(first_team, second_team)
@@ -456,7 +480,6 @@ def gui_game_logic():
                 for ans in range(num_ans):
 
                     if values[f'-SUBMITTED_ANSWER{ans + 1}-'] == '':
-
                         raise NameError
 
                     temp_list = [values[f'-SUBMITTED_ANSWER{ans + 1}-'], int(values[f'-SUBMITTED_SCORE{ans + 1}-'])]
@@ -467,7 +490,6 @@ def gui_game_logic():
             except ValueError:
 
                 for ans in range(num_ans):
-
                     window7[f'-SUBMITTED_ANSWER{ans + 1}-'].update('')
                     window7[f'-SUBMITTED_SCORE{ans + 1}-'].update('')
 
@@ -476,7 +498,6 @@ def gui_game_logic():
             except NameError:
 
                 for ans in range(num_ans):
-
                     window7[f'-SUBMITTED_ANSWER{ans + 1}-'].update('')
                     window7[f'-SUBMITTED_SCORE{ans + 1}-'].update('')
 
@@ -494,6 +515,7 @@ def gui_game_logic():
             break
 
     window.close()
+
 
 
 if __name__ == "__main__":
