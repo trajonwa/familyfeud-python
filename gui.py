@@ -564,3 +564,4 @@ if __name__ == "__main__":
     window1, window2, window3, window4, \
     window5, window6, window7, window8 = make_window1(), None, None, None, None, None, None, None
     gui_game_logic()
+    #closed
