@@ -7,6 +7,8 @@ from game import Game
 import game
 import random
 from addcards import add_card
+from sqlite3 import Error
+#from database_file import add_card_to_db, sqlite3_connection
 
 sg.theme('BlueMono')
 
@@ -218,8 +220,8 @@ def wrong_ans(num_wrong):
                      finalize=True, background_color='white', no_titlebar=True)
 
 
-# start off with 1 window open
 def gui_event_logic():
+    # start off with 1 window open
     window1, window2, window3, window4, \
         window5, window6, window7, window8 = make_window1(), None, None, None, None, None, None, None
 
@@ -481,6 +483,9 @@ def gui_event_logic():
             else:
 
                 window3['-TEAM_INVALID-'].update('          Please fill both fields!')
+                window3.refresh()
+                time.sleep(1)
+                window3['-TEAM_INVALID-'].update('')
 
         elif event == '-ADD_CARDS-':
 
@@ -513,6 +518,11 @@ def gui_event_logic():
                 else:
 
                     window6['-INVALID_WINDOW6-'].update('Please enter valid integer !')
+
+                window6.refresh()
+                time.sleep(1)
+                window6['-INVALID_WINDOW6-'].update('')
+
             else:
 
                 window6.close()
@@ -531,7 +541,6 @@ def gui_event_logic():
 
                     temp_list = [values[f'-SUBMITTED_ANSWER{ans + 1}-'], int(values[f'-SUBMITTED_SCORE{ans + 1}-'])]
                     list_of_new_answers.append(temp_list)
-
                 add_card(question, list_of_new_answers)
 
             except ValueError:
@@ -541,6 +550,9 @@ def gui_event_logic():
                     window7[f'-SUBMITTED_SCORE{ans + 1}-'].update('')
 
                 window7['-INVALID_WINDOW7-'].update('Please enter valid integer !')
+                window7.refresh()
+                time.sleep(1)
+                window7['-INVALID_WINDOW7-'].update('')
 
             except NameError:
 
@@ -549,10 +561,16 @@ def gui_event_logic():
                     window7[f'-SUBMITTED_SCORE{ans + 1}-'].update('')
 
                 window7['-INVALID_WINDOW7-'].update("Answer can't be empty !")
+                window7.refresh()
+                time.sleep(1)
+                window7['-INVALID_WINDOW7-'].update('')
 
             else:
 
                 window7.close()
+
+                #conn = sqlite3_connection()
+                #add_card_to_db(conn, question, list_of_new_answers)
 
         elif event == '-CONTINUE_GAME-':
 
@@ -571,6 +589,7 @@ def gui_event_logic():
             break
 
     window.close()
+
 
 if __name__ == "__main__":
 
