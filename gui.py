@@ -20,11 +20,11 @@ def make_window1():
 
     layout = [
         [sg.Image(r'family.PNG')],
-        [sg.Text('Click the below buttons to interact with the game')],
-        [sg.Button('View Instructions', key='-VIEW_INSTRUCTIONS-'),
-         sg.Button('Play Game', key='-PLAY_GAME-'),
-         sg.Button('Add Cards', key='-ADD_CARDS-')]]
-    return sg.Window('Start Window', layout, element_justification='center',
+        [sg.Text('Click the buttons below to interact with the game')],
+        [sg.Button('View Instructions', key='-VIEW_INSTRUCTIONS-', mouseover_colors='green'),
+         sg.Button('Play Game', key='-PLAY_GAME-', mouseover_colors='green'),
+         sg.Button('Add Cards', key='-ADD_CARDS-', mouseover_colors='green')]]
+    return sg.Window('Welcome to Family Feud', layout, element_justification='center',
                      modal=True, finalize=True, grab_anywhere=True)
 
 
@@ -35,9 +35,9 @@ def make_window2():
     """
     layout = [
         [sg.Image(r'rules.PNG')],
-        [sg.Button('Exit', key='-EXIT_INSTRUCTIONS-')]]
+        [sg.Button('Exit', key='-EXIT_INSTRUCTIONS-', mouseover_colors='green')]]
 
-    return sg.Window('Rules', layout, element_justification='center',
+    return sg.Window('Game rules', layout, element_justification='center',
                      modal=True, finalize=True, grab_anywhere=True)
 
 
@@ -49,10 +49,10 @@ def make_window3():
     """
     layout = [
         [sg.Image(r'team.PNG')],
-        [sg.Text('Team 1 name: '), sg.Input(key='-TEAM1-', size=(20, 10))],
-        [sg.Text('Team 2 name: '), sg.Input(key='-TEAM2-', size=(20, 10))],
+        [sg.Text('Enter team1 name: '), sg.Input(key='-TEAM1-', size=(20, 10))],
+        [sg.Text('Enter team2 name: '), sg.Input(key='-TEAM2-', size=(20, 10))],
         [sg.Text(size=(40, 1), key='-TEAM_INVALID-', text_color='red')],
-        [sg.Button('Submit', key='-TEAM_INFO-')]]
+        [sg.Button('Submit', key='-TEAM_INFO-', mouseover_colors='green')]]
     return sg.Window('Team Info', layout, element_justification='center',
                      modal=True, finalize=True, grab_anywhere=True)
 
@@ -78,21 +78,21 @@ def make_window4(num_answer=3):
         [sg.Text('*** Score 0',
                  font=("Arial", 12),
                  key='-TEAM1_SCORE-',
-                 size=(15, 1),
+                 size=(None, 1),
                  justification='right'),
          sg.Text('Round score: 0',
                  font=("Arial", 12),
                  key='-ROUNDSCORE-',
-                 size=(15, 1),
+                 size=(None, 1),
                  justification='center'),
          sg.Text('*** Score 0',
                  font=("Arial", 12),
                  key='-TEAM2_SCORE-',
-                 size=(15, 1),
+                 size=(None, 1),
                  justification='left')],
         [sg.Text('*** have *** remaining tries',
                  key='-TRIAL-',
-                 size=(30, 1),
+                 size=(None, 1),
                  justification='center')]]
     if num_answer % 2 == 0:
         num_answer = num_answer // 2
@@ -103,25 +103,28 @@ def make_window4(num_answer=3):
 
         buttons_left.append([sg.Button(str(gui_ans + 1),
                                        font=("Arial", 15),
-                                       key='-HIDDEN_ANS' + str(gui_ans + 1) + '-', )])
+                                       key='-HIDDEN_ANS' + str(gui_ans + 1) + '-',
+                                       button_color='#07125B')])
 
         buttons_right.append([sg.Button(str(gui_ans + num_answer + 1),
                                         font=("Arial", 15),
-                                        key='-HIDDEN_ANS' + str(gui_ans + num_answer + 1) + '-')])
+                                        key='-HIDDEN_ANS' + str(gui_ans + num_answer + 1) + '-',
+                                        button_color='#07125B')])
 
     if odd:
         buttons_right.append([sg.Button(str(num_answer + num_answer + 1),
                                         font=("Arial", 15),
-                                        key='-HIDDEN_ANS' + str(num_answer + num_answer + 1) + '-')])
+                                        key='-HIDDEN_ANS' + str(num_answer + num_answer + 1) + '-',
+                                        button_color='#07125B')])
 
     layout.append([sg.Column(buttons_left, element_justification='right'),
                   sg.Column(buttons_right, element_justification='left')])
     layout.append([sg.Text('Please enter your answer for the question')])
     layout.append([sg.Input(key='-QUESTION_ANS-', enable_events=True)])
     layout.append([sg.Text('', key='-ANSWER_PRESENT-', text_color='red', size=(None, 1))])
-    layout.append([sg.Button('Submit Answer', key='-GAME_ANSWER-')])
+    layout.append([sg.Button('Submit Answer', key='-GAME_ANSWER-', mouseover_colors='green')])
 
-    return sg.Window('Main Game', layout, element_justification='center',
+    return sg.Window("Let's play", layout, element_justification='center',
                      modal=True, finalize=True, grab_anywhere=True)
 
 
@@ -136,7 +139,8 @@ def make_window5():
         [sg.Text('The winner is ****', size=(15, 1), key='-WINNER-')],
         [sg.Text('Do you want to play again?')],
         [sg.Text('', key='-NO_CARDS-', size=(None, 1), text_color='#F07610')],
-        [sg.Button('YES', key='-CONTINUE_GAME-'), sg.Button('NO', key='-END_GAME-')]]
+        [sg.Button('YES', key='-CONTINUE_GAME-', mouseover_colors='green'),
+         sg.Button('NO', key='-END_GAME-', mouseover_colors='green')]]
 
     return sg.Window('Game Over', layout, element_justification='center',
                      modal=True, finalize=True, grab_anywhere=True)
@@ -150,12 +154,12 @@ def make_window6():
     """
     layout = [
         [sg.Image(r'card.PNG')],
-        [sg.Text('Enter question: '), sg.Input(key='-NEW_QUESTION-', size=(20, 10))],
+        [sg.Text("Please enter question (can't be empty): "), sg.Input(key='-NEW_QUESTION-', size=(20, 10))],
         [sg.Text('How many answers do you want to put? (4-8 answers only)'),
          sg.Input(key='-ANSWER_NUMBER-', size=(10, 10))],
         [sg.Text('', size=(20, 1), key='-INVALID_WINDOW6-', text_color='red')],
-        [sg.Button('Submit Card', key='-QUESTION_SUBMITTED-')]]
-    return sg.Window('Add Card', layout, element_justification='center',
+        [sg.Button('Submit Card', key='-QUESTION_SUBMITTED-', mouseover_colors='green')]]
+    return sg.Window('Submit question', layout, element_justification='center',
                      modal=True, finalize=True, grab_anywhere=True)
 
 
@@ -185,7 +189,7 @@ def make_window7(num=4):
     layout.append([sg.Text('', key='-INVALID_WINDOW7-', text_color='red', size=(20, 1))])
     layout.append([sg.Button('Submit Answers', key='-ANSWER_SCORE-')])
 
-    return sg.Window('Add Card', layout, element_justification='center',
+    return sg.Window('Submit answers', layout, element_justification='center',
                      modal=True, finalize=True, grab_anywhere=True)
 
 
@@ -214,11 +218,11 @@ def wrong_ans(num_wrong):
                      finalize=True, background_color='white', no_titlebar=True)
 
 
-def gui_game_logic():
-
+# start off with 1 window open
+def gui_event_logic():
     window1, window2, window3, window4, \
-    window5, window6, window7, window8 = make_window1(), None, None, None, None, None, None, None
-    
+        window5, window6, window7, window8 = make_window1(), None, None, None, None, None, None, None
+
     while True:  # Event Loop
         window, event, values = sg.read_all_windows()
         if event == sg.WIN_CLOSED or event == 'Exit':
@@ -228,56 +232,44 @@ def gui_game_logic():
             elif window == window1:  # if closing win 1, exit program
                 break
         elif event == '-VIEW_INSTRUCTIONS-':
+
             window2 = make_window2()
             print(len(classes.cards))
 
         elif event == '-EXIT_INSTRUCTIONS-':
+
             window2.close()
+
         elif event == '-PLAY_GAME-':
+
             window3 = make_window3()
+
         elif event == '-GAME_ANSWER-':
 
-            answer = values['-QUESTION_ANS-']
-            list_of_answers = []
-
-            for keys in current_card.answers:
-                list_of_answers.append(keys)
+            answer = values['-QUESTION_ANS-'].strip()
 
             window4['-QUESTION_ANS-'].update('')
 
             if (answer.upper() not in list_of_answers) and (steal is False):
 
-                print(str(steal) + " Hahaha")
+                print("{0} Hahaha incorrect answer".format(str(steal)))
 
                 game_instance.missed_answers += 1
+
+                random_window = wrong_ans(game_instance.missed_answers)
+                random_window.bring_to_front()
+                time.sleep(1)
+                random_window.close()
+
                 window4['-TRIAL-'].update(
-                    f'{current_team.name} you have {3 - game_instance.missed_answers} remaining tries')
+                    f'{current_team.name} you have {3 - game_instance.missed_answers} tries remaining !')
 
-                if game_instance.missed_answers == 1:
-
-                    random_window = wrong_ans(1)
-                    random_window.bring_to_front()
-                    time.sleep(1)
-                    random_window.close()
-
-                elif game_instance.missed_answers == 2:
-
-                    random_window = wrong_ans(2)
-                    random_window.bring_to_front()
-                    time.sleep(1)
-                    random_window.close()
-
-                elif game_instance.missed_answers == 3:
+                if game_instance.missed_answers == 3:
 
                     game_instance.missed_answers = 0
                     steal = True
                     print('steal changed ' + str(steal))
                     current_team = game_instance.get_next_team()
-
-                    random_window = wrong_ans(3)
-                    random_window.bring_to_front()
-                    time.sleep(1)
-                    random_window.close()
                     window4['-TRIAL-'].update(
                         f'{current_team.name} you got 1 guess to steal!')
 
@@ -285,142 +277,151 @@ def gui_game_logic():
 
                 if (answer.upper() in list_of_answers) and (answer.upper() not in answers_displayed):
 
+                    print(f'We are stealing in round {game_instance.round} and answer correct ')
+                    index = list_of_answers.index(answer.upper())
                     game_instance.temp_score += current_card.answers[answer.upper()][0]
+                    window4[f'-HIDDEN_ANS{str(index + 1)}-'].update(
+                        answer.upper() + " " + str(current_card.answers[answer.upper()][0]))
+                    window4['-ROUNDSCORE-'].update(f'Round score: {game_instance.temp_score}')
 
                     if current_team == first_team:
 
-                        window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {game_instance.temp_score}")
                         current_team.score += game_instance.temp_score
+                        window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {current_team.score}")
 
                     else:
 
-                        window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {game_instance.temp_score}")
                         current_team.score += game_instance.temp_score
+                        window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {current_team.score}")
 
-                else:
+                if (answer.upper() not in list_of_answers) or (answer.upper() in answers_displayed):
+
+                    print(f'We are stealing in round {game_instance.round} and answer incorrect ')
 
                     if current_team == first_team:
 
-                        window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {game_instance.temp_score}")
                         second_team.score += game_instance.temp_score
+                        window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {second_team.score}")
 
                     else:
 
-                        window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {game_instance.temp_score}")
                         first_team.score += game_instance.temp_score
-
-                window4['-ROUNDSCORE-'].update(f'Round score: 0')
-                game_instance.temp_score = 0
-                print(f'The game round is {game_instance.round}')
+                        window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {first_team.score}")
 
                 if (game_instance.round % 2) == 0:
 
                     highest_score = game_instance.highest_score()
+                    answers_displayed = set()
+                    print(f'We are stealing in round  {game_instance.round}')
 
                     if type(highest_score) is str:
 
+                        window4.refresh()
                         time.sleep(1)
                         window4.close()
                         window5 = make_window5()
                         window5['-WINNER-'].update(f'There was a tie')
 
                     else:
+
+                        window4.refresh()
                         time.sleep(1)
                         window4.close()
                         window5 = make_window5()
                         window5['-WINNER-'].update(f'The winner is {highest_score.name}')
 
-                else:
+                if (game_instance.round % 2) == 1:
 
+                    print("Just updating guis")
                     answers_displayed = set()
-                    try:
+                    current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+                    list_of_answers = []
 
-                        current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+                    for keys in current_card.answers:
+                        list_of_answers.append(keys)
 
-                    except ValueError:
-
-                        sg.popup_auto_close('Our fault ! Please add a cards to continue 🥺')
-                        window4.hide()
-                        window6 = make_window6()
-                        window6.bring_to_front()
-                        added_card = True
-
-                    if added_card is True:
-                        window4.un_hide()
-                        current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
-                        added_card = False
-                    temp_window4 = make_window4(len(current_card.answers))
-                    temp_window4.hide()
-                    time.sleep(2)
+                    window4.refresh()
+                    time.sleep(1)
                     window4.close()
-                    temp_window4.un_hide()
-                    window4 = temp_window4
+                    window4 = make_window4(len(current_card.answers))
+                    window4['-ROUNDSCORE-'].update(f'Round score: 0')
                     window4['-GAME_QUESTION-'].update(f'{current_card.question}')
-                    window4['-TRIAL-'].update(f'{current_team.name} you got 3 guesses left!')
+                    window4['-TRIAL-'].update(f'{current_team.name} you got {3 - game_instance.missed_answers} guesses left!')
                     window4['-ROUNDSCORE-'].update(f'Round score: 0')
                     window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {first_team.score}")
                     window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {second_team.score}")
 
+                print("game round changed")
                 game_instance.round += 1
                 steal = False
+                game_instance.temp_score = 0
+                num_of_correct_ans = 0
+
             elif answer.upper() in answers_displayed:
 
-                window4['-ANSWER_PRESENT-'].update('Sorry, that answer is on the board!')
                 game_instance.missed_answers += 1
-                window4['-TRIAL-'].update(
-                    f'{current_team.name} you have {3 - game_instance.missed_answers} remaining tries')
+                print(f'Missed answer so far {game_instance.missed_answers}')
+                if game_instance.missed_answers == 3:
 
-            elif answer.upper() in list_of_answers:
+                    game_instance.missed_answers = 0
+                    steal = True
+                    print('steal changed ' + str(steal))
+                    current_team = game_instance.get_next_team()
+                    window4['-TRIAL-'].update(
+                        f'{current_team.name} you got 1 guess to steal!')
+                else:
 
+                    window4['-ANSWER_PRESENT-'].update('Sorry, that answer is on the board!')
+                    window4.refresh()
+                    time.sleep(1)
+                    window4['-ANSWER_PRESENT-'].update('')
+                    window4['-QUESTION_ANS-'].update('')
+                    window4['-TRIAL-'].update(
+                        f'{current_team.name} you have {3 - game_instance.missed_answers} remaining tries')
+
+            elif (answer.upper() in list_of_answers) and (answer.upper() not in answers_displayed):
+
+                print("Not final round ")
                 num_of_correct_ans += 1
                 answers_displayed.add(answer.upper())
                 index = list_of_answers.index(answer.upper())
                 game_instance.temp_score += current_card.answers[answer.upper()][0]
 
                 window4['-ANSWER_PRESENT-'].update('')
+                window4[f'-HIDDEN_ANS{str(index + 1)}-'].update(
+                    answer.upper() + " " + str(current_card.answers[answer.upper()][0]))
+                window4['-ROUNDSCORE-'].update(f'Round score: {game_instance.temp_score}')
 
-                if num_of_correct_ans != len(list_of_answers):
-
-                    window4[f'-HIDDEN_ANS{str(index + 1)}-'].update(
-                        answer.upper() + " " + str(current_card.answers[answer.upper()][0]))
-                    window4['-ROUNDSCORE-'].update(f'Round score: {game_instance.temp_score}')
-
-                else:
+                if num_of_correct_ans == len(list_of_answers):
 
                     num_of_correct_ans = 0
+                    game_instance.missed_answers = 0
                     current_team.score += game_instance.temp_score
 
                     if (game_instance.round % 2) == 1:
 
+                        print("Final round 1")
                         if current_team == first_team:
 
-                            window4['-TEAM1_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
+                            window4['-TEAM1_SCORE-'].update(f"{current_team.name}'s score: {first_team.score}")
 
                         elif current_team == second_team:
 
-                            window4['-TEAM2_SCORE-'].update(f"{current_team.name}'s score: {game_instance.temp_score}")
+                            window4['-TEAM2_SCORE-'].update(f"{current_team.name}'s score: {second_team.score}")
 
-                        time.sleep(2)
                         current_team = game_instance.get_next_team()
-                        answers_displayed = set()
-                        try:
-
-                            current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
-
-                        except ValueError:
-
-                            sg.popup_auto_close('Our fault ! Please add a cards to continue 🥺')
-                            window4.hide()
-                            window6 = make_window6()
-                            window6.bring_to_front()
-                            added_card = True
-
-                        if added_card is True:
-                            window4.un_hide()
-                            current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
-                            added_card = False
-                            
+                        current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
                         game_instance.temp_score = 0
+
+                        answers_displayed = set()
+                        list_of_answers = []
+
+                        for keys in current_card.answers:
+                            list_of_answers.append(keys)
+
+                        window4.refresh()
+                        time.sleep(1)
+                        window4.close()
                         window4 = make_window4(len(current_card.answers))
                         window4['-GAME_QUESTION-'].update(f'{current_card.question}')
                         window4['-TRIAL-'].update(f'{current_team.name} you got 3 guesses left!')
@@ -430,15 +431,19 @@ def gui_game_logic():
 
                     elif (game_instance.round % 2) == 0:
 
+                        print("Final round 2")
                         highest_score = game_instance.highest_score()
                         if type(highest_score) is str:
 
+                            window4.refresh()
                             time.sleep(1)
                             window4.close()
                             window5 = make_window5()
                             window5['-WINNER-'].update(f'There was a tie')
 
                         else:
+
+                            window4.refresh()
                             time.sleep(1)
                             window4.close()
                             window5 = make_window5()
@@ -452,20 +457,24 @@ def gui_game_logic():
                 steal = False
                 added_card = False
                 first_team = Team(values['-TEAM1-'])
-                answers_displayed = set()
                 second_team = Team(values['-TEAM2-'])
-                num_of_correct_ans = 0
                 game_instance = Game(first_team, second_team)
                 game_instance.round = 1
 
                 current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
                 current_team = game_instance.get_current_team()
 
+                list_of_answers = []
+                num_of_correct_ans = 0
+                answers_displayed = set()
+
+                for keys in current_card.answers:
+                    list_of_answers.append(keys)
+
                 window3.close()
                 window4 = make_window4(len(current_card.answers))
-
                 window4['-GAME_QUESTION-'].update(f'{current_card.question}')
-                window4['-TRIAL-'].update(f'{current_team.name} you got 3 guesses left!')
+                window4['-TRIAL-'].update(f'{current_team.name} you got {3 - game_instance.missed_answers} guesses left!')
                 window4['-TEAM1_SCORE-'].update(f"{first_team.name}'s score: {first_team.score}")
                 window4['-TEAM2_SCORE-'].update(f"{second_team.name}'s score: {second_team.score}")
 
@@ -555,7 +564,7 @@ def gui_game_logic():
             except ValueError:
 
                 window5['-NO_CARDS'].update('Our fault ! Please add a card to continue 🥺')
-                time.sleep(2)
+                time.sleep(1)
                 window5.close()
 
         elif event == '-END_GAME-':
@@ -564,5 +573,5 @@ def gui_game_logic():
     window.close()
 
 if __name__ == "__main__":
-    gui_game_logic()
-    #closed
+
+    gui_event_logic()
