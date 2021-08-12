@@ -501,10 +501,14 @@ def gui_event_logic():
                 if question == '':
 
                     window6['-INVALID_WINDOW6-'].update("Question can't be empty !")
+                    raise Exception
+
 
                 elif (4 > num_ans) or (num_ans > 8):
 
                     window6['-INVALID_WINDOW6-'].update('Answers range incorrect !')
+    
+                    raise Exception   
 
                 window6['-NEW_QUESTION-'].update('')
                 window6['-ANSWER_NUMBER-'].update('')
@@ -522,6 +526,14 @@ def gui_event_logic():
                 window6.refresh()
                 time.sleep(1)
                 window6['-INVALID_WINDOW6-'].update('')
+            
+            except Exception:
+
+                window6.refresh()
+                time.sleep(1)
+                window6['-INVALID_WINDOW6-'].update('')
+                window6['-NEW_QUESTION-'].update('')
+                window6['-ANSWER_NUMBER-'].update('')
 
             else:
 
