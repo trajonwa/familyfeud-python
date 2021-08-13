@@ -1,7 +1,5 @@
 import classes
-from time import sleep, time
 from classes import GameCard
-from classes import Team
 
 
 # Card 1

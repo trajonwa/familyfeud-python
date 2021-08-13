@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+
 sg.theme('BlueMono')
 
 
@@ -152,15 +153,6 @@ def make_window6():
         [sg.Button('Submit Card', key='-QUESTION_SUBMITTED-', mouseover_colors='green')]]
     return sg.Window('Submit question', layout, element_justification='center',
                      modal=True, finalize=True, grab_anywhere=True)
-
-
-"""
-answer,score=input('Enter an answer followed by the corresponding score').spilt
-for i in answers(1,key):
-    [[sg.Text('Answer:')], sg.Input(key='-ANSWERANDSCORE-', size=(20,20))]
-except ValueError:
-    print('Invalid Input. Try again.')
-"""
 
 
 def make_window7(num=4):
