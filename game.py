@@ -1,88 +1,20 @@
 import classes
-from classes import GameCard
+from sqlite_db import intial_data, create_tables,\
+    fetch_all
 
 
-# Card 1
+def familyfeud_database():
+    
+    try:
+        create_tables()
+        intial_data()
+        fetch_all()
 
-card0 = GameCard("In Horror Movies, Name a Place Teenagers Go Where There’s Always a Killer On the Loose")
-card0.answers["CABIN"] = (49, {"CAMP", "WOODS"})
-card0.answers["GRAVEYARD"] = (12, {})
-card0.answers["MOVIE THEATRE"] = (11, {"DRIVE-IN"})
-card0.answers["BASEMENT"] = (11, {"CELLAR"})
-card0.answers["CLOSET"] = (5, {})
-card0.answers["BATHROOM"] = (4, {"SHOWER"})
-card0.answers["BEDROOM"] = (4, {"BED"})
-card0.answers["PARTY"] = (4, {})
-
-# Card 2
-'''
-card1 = GameCard("Name Marvel’s Avengers")
-card1.answers["CAPTAIN AMERICA"] = (22, {})
-card1.answers["IRON MAN"] = (22, {})
-card1.answers["BLACK PANTHER"] = (20, {}) 
-card1.answers["THE HULK"] = (12, {})
-card1.answers["THOR"] = (12, {})
-card1.answers["BLACK WIDOW"] = (6, {})
-card1.answers["SPIDERMAN"] = (3, {})
-card1.answers["HAWKEYE"] = (3, {})
-
-# Card 3
-
-card2 = GameCard("Name a Common Candy Bar Component")
-card2.answers["CHOCOLATE"] = (36, {})
-card2.answers["PEANUTS"] = (22, {})
-card2.answers["CARAMEL"] = (15, {}) 
-card2.answers["ALMONDS"] = (12, {})
-card2.answers["NOUGAT"] = (10, {})
-card2.answers["COCONUT"] = (5, {})
-
-# Card 4
-
-card3 = GameCard("Name a Type of Insurance")
-card3.answers["CAR"] = (31, {})
-card3.answers["HEALTH"] = (27, {})
-card3.answers["LIFE"] = (20, {}) 
-card3.answers["HOME"] = (10, {})
-card3.answers["FLOOD"] = (6, {})
-card3.answers["TRAVEL"] = (4, {})
-card3.answers["BLACKJACK"] = (2, {})
-
-# Card 5
-
-card4 = GameCard("Where Do Kids Nowadays Spend Most of their Time?")
-card4.answers["ROOM"] = (28, {})
-card4.answers["SCHOOL"] = (22, {})
-card4.answers["INTERNET"] = (16, {}) 
-card4.answers["MALL"] = (12, {})
-card4.answers["FRIEND'S HOUSE"] = (10, {})
-card4.answers["PARK"] = (8, {})
-card4.answers["WORK"] = (4, {})
-
-# Card 6
-
-card5 = GameCard("Name A Fruit You Might Eat In The Morning")
-card5.answers["BANANA"] = (25, {})
-card5.answers["GRAPE FRUIT"] = (22, {})
-card5.answers["STRAWBERRY"] = (19, {}) 
-card5.answers["APPLE"] = (15, {})
-card5.answers["ORANGE"] = (12, {})
-card5.answers["MELON"] = (5, {})
-card5.answers["PEACH"] = (2, {})
-
-# Card 7
-
-card6 = GameCard("Name A Country With A Lot of Land")
-card6.answers["RUSSIA"] = (31, {})
-card6.answers["CHINA"] = (17, {})
-card6.answers["CANADA"] = (17, {}) 
-card6.answers["USA"] = (16, {})
-card6.answers["GREENLAND"] = (5, {})
-card6.answers["MEXICO"] = (4, {})
-card6.answers["AUSTRALIA"] = (4, {})
-card6.answers["INDIA"] = (2, {})
-'''
+    except:
+        fetch_all()
 
 # A list of cards to help replicate generating random cards.
+familyfeud_database()
 list_of_cards = classes.cards
 
 # This list just contains a list of the answers in order to print said answers instead of using the dictionary.

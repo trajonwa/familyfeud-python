@@ -1,11 +1,13 @@
 import time
+import game
+import random
+import PySimpleGUI as sg
 from gui import make_window1, make_window2, make_window3, make_window4,\
     make_window5, make_window6, make_window7, wrong_ans
 from classes import Team
 from game import Game
-import game
-import random
-import PySimpleGUI as sg
+from sqlite_db import add_card_to_db
+
 
 
 def gui_event_logic():
@@ -330,7 +332,7 @@ def gui_event_logic():
                         raise NameError
                     temp_list = [values[f'-SUBMITTED_ANSWER{ans + 1}-'], int(values[f'-SUBMITTED_SCORE{ans + 1}-'])]
                     list_of_new_answers.append(temp_list)
-                game.add_card(question, list_of_new_answers)
+                add_card_to_db(question, list_of_new_answers)
 
             except ValueError:
                 for ans in range(num_ans):
