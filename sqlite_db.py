@@ -7,6 +7,10 @@ from classes import GameCard
 db_name = "familyfeud_db"
 
 def create_tables():
+    """
+    This function creates the database schema to be used in the game.
+    Uses context manager to make connection.
+    """
 
     with sqlite3.connect(db_name) as conn:
 
@@ -41,6 +45,10 @@ def create_tables():
 
 
 def intial_data():
+    """
+    Prefills database with data if it's the first time running the script.
+    Uses context manager to make connection.
+    """
 
     with sqlite3.connect(db_name) as conn:
         cursor_obj = conn.cursor()
@@ -99,6 +107,12 @@ def intial_data():
 
 
 def fetch_all():
+    """
+    Collects all the data from the database to use in the game.
+    Might change it fetchmany if database gets too big.
+    Uses context manager to make connection.
+
+    """
 
     with sqlite3.connect(db_name) as conn:
 
@@ -110,7 +124,6 @@ def fetch_all():
                             """)
 
         data = cursor_obj.fetchall()
-        print(data)
         current_question = data[0][0]
         card = GameCard(current_question)
 
@@ -144,6 +157,10 @@ def fetch_all():
 
 
 def add_card_to_db(question, list_of_answers):
+    """
+    Used to populate the database with the question and answers received from the user.
+    Uses context manager to make connection.
+    """
 
     with sqlite3.connect(db_name) as conn:
     
