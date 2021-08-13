@@ -337,6 +337,8 @@ def gui_event_logic():
                     temp_list = [values[f'-SUBMITTED_ANSWER{ans + 1}-'], int(values[f'-SUBMITTED_SCORE{ans + 1}-'])]
                     list_of_new_answers.append(temp_list)
                 add_card_to_db(question.strip().upper(), list_of_new_answers)
+                sg.popup_auto_close("Card added successfully", no_titlebar=True, 
+                                                                background_color='green')
             except ValueError:
                 for ans in range(num_ans):
                     window7[f'-SUBMITTED_ANSWER{ans + 1}-'].update('')
@@ -368,7 +370,7 @@ def gui_event_logic():
                 window3 = make_window3()
                 window5.close()
         elif event == '-END_GAME-': # Exit out of the program
-            break
+                window5.close()
     window.close()
 
 if __name__ == "__main__":
