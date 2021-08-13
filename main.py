@@ -7,6 +7,8 @@ from gui import make_window1, make_window2, make_window3, make_window4,\
 from classes import Team
 from game import Game
 from sqlite_db import add_card_to_db
+from sqlite3 import Error
+
 
 
 
@@ -332,7 +334,7 @@ def gui_event_logic():
                         raise NameError
                     temp_list = [values[f'-SUBMITTED_ANSWER{ans + 1}-'], int(values[f'-SUBMITTED_SCORE{ans + 1}-'])]
                     list_of_new_answers.append(temp_list)
-                add_card_to_db(question, list_of_new_answers)
+                add_card_to_db(question.stip().upper(), list_of_new_answers)
 
             except ValueError:
                 for ans in range(num_ans):
@@ -352,6 +354,12 @@ def gui_event_logic():
                 window7.refresh()
                 time.sleep(1)
                 window7['-INVALID_WINDOW7-'].update('')
+            except Error:
+                window7['-INVALID_WINDOW7-'].update('That question exists. Please choose a different one !')
+                window7.refresh()
+                time.sleep(1)
+                window7.close()
+                window6 = make_window6()
             else:
                 window7.close()
 

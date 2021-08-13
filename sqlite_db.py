@@ -1,7 +1,7 @@
 import sqlite3
 import random
 from classes import GameCard
-from sqlite3 import Error
+
 
 
 db_name = "familyfeud_db"
@@ -14,9 +14,8 @@ def create_tables():
 
         cursor_obj.execute("""
                         CREATE TABLE questionnare (
-                        question_id INTEGER,
-                        question TEXT,
-                        PRIMARY KEY(question_id, question)
+                        question TEXT PRIMARY KEY,
+                        question_id INTEGER
                         )
                         """
                         )
