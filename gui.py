@@ -11,7 +11,7 @@ def make_window1():
     """
 
     layout = [
-        [sg.Image(r'family.PNG')],
+        [sg.Image(r'images/family.PNG')],
         [sg.Text('Click the buttons below to interact with the game')],
         [sg.Button('View Instructions', key='-VIEW_INSTRUCTIONS-', mouseover_colors='green'),
          sg.Button('Play Game', key='-PLAY_GAME-', mouseover_colors='green'),
@@ -26,7 +26,7 @@ def make_window2():
     :return:
     """
     layout = [
-        [sg.Image(r'rules.PNG')],
+        [sg.Image(r'images/rules.PNG')],
         [sg.Button('Exit', key='-EXIT_INSTRUCTIONS-', mouseover_colors='green')]]
 
     return sg.Window('Game rules', layout, element_justification='center',
@@ -40,7 +40,7 @@ def make_window3():
     :return:
     """
     layout = [
-        [sg.Image(r'team.PNG')],
+        [sg.Image(r'images/team.PNG')],
         [sg.Text('Enter team1 name: '), sg.Input(key='-TEAM1-', size=(20, 10))],
         [sg.Text('Enter team2 name: '), sg.Input(key='-TEAM2-', size=(20, 10))],
         [sg.Text(size=(40, 1), key='-TEAM_INVALID-', text_color='red')],
@@ -61,7 +61,7 @@ def make_window4(num_answer=3):
     buttons_left = []
     buttons_right = []
     layout = [
-        [sg.Image(r'family.PNG')],
+        [sg.Image(r'images/family.PNG')],
         [sg.Text(key='-GAME_QUESTION-',
                  font=("Arial", 15),
                  text_color='#F07610',
@@ -127,7 +127,7 @@ def make_window5():
     :return:
     """
     layout = [
-        [sg.Image(r'game.PNG')],
+        [sg.Image(r'images/game.PNG')],
         [sg.Text('The winner is ****', size=(15, 1), key='-WINNER-')],
         [sg.Text('Do you want to play again?')],
         [sg.Text('', key='-NO_CARDS-', size=(None, 1), text_color='#F07610')],
@@ -145,7 +145,7 @@ def make_window6():
     :return:
     """
     layout = [
-        [sg.Image(r'card.PNG')],
+        [sg.Image(r'images/card.PNG')],
         [sg.Text("Please enter question (can't be empty): "), sg.Input(key='-NEW_QUESTION-', size=(20, 10))],
         [sg.Text('How many answers do you want to put? (4-8 answers only)'),
          sg.Input(key='-ANSWER_NUMBER-', size=(10, 10))],
@@ -161,7 +161,7 @@ def make_window7(num=4):
     :param num:
     :return:
     """
-    layout = [[sg.Image(r'card.PNG')]]
+    layout = [[sg.Image(r'images/card.PNG')]]
 
     for i in range(num):
         layout.append([sg.Text('Answer ' + str(i + 1)),
