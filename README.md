@@ -1,12 +1,11 @@
 # Family Feud
 
-<img src="https://github.com/trajonwa/familyfeud-python/blob/main/images/git_familyfeud.PNG" width=250><br>
+<img src="https://github.com/trajonwa/familyfeud-python/blob/main/images/git_familyfeud.PNG" width=600 height=400><br>
 
 This is a game that simulates an American television game show created by Mark Goodson in which two families compete to name the most popular answers to survey questions in order to win cash and prizes.
 
 
 ### User Stories
-
 
 #### REQUIRED 
 - [X] The game should have a menu of functions
@@ -44,4 +43,4 @@ This is a game that simulates an American television game show created by Mark G
 
 
 ### App Walkthough GIF
-<img src="https://github.com/trajonwa/familyfeud-python/blob/main/images/familyfeud_gif.gif" width=250><br>
+<img src="https://github.com/trajonwa/familyfeud-python/blob/main/images/familyfeud_gif.gif" width=600 height=400><br>
