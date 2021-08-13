@@ -26,7 +26,7 @@ def create_tables():
 
         cursor_obj.execute("""
                         CREATE TABLE answers (
-                        answer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        answer_id INTEGER PRIMARY KEY,
                         question_id INTEGER NOT NULL,
                         answer TEXT NOT NULL,
                         multiple_answers INTEGER NOT NULL,
@@ -36,7 +36,7 @@ def create_tables():
 
         cursor_obj.execute("""
                         CREATE TABLE scores (
-                        score_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        score_id INTEGER PRIMARY KEY,
                         answer_id INTEGER NOT NULL,
                         score INTEGER NOT NULL,
                         FOREIGN KEY(answer_id) REFERENCES answers(answer_id) ON DELETE CASCADE )
@@ -165,9 +165,9 @@ def add_card_to_db(question, list_of_answers):
     with sqlite3.connect(db_name) as conn:
     
         cursor_obj = conn.cursor()
-        random_key1 = random.randint(12, 99999999)
-        random_key2 = random.randint(12, 99999999)
-        random_key3 = random.randint(12, 99999999)
+        random_key1 = random.randint(12, 9999999999999)
+        random_key2 = random.randint(12, 9999999999999)
+        random_key3 = random.randint(12, 9999999999999)
         count_to_make_unique = 0
 
         cursor_obj.execute("""INSERT INTO questionnare (question_id, question) VALUES
@@ -178,7 +178,6 @@ def add_card_to_db(question, list_of_answers):
 
             all_answers = ans_list[0].split("/")
 
-            print(ans_list[0])
             if len(all_answers) > 1:
 
                 cursor_obj.execute("""INSERT INTO answers (answer_id, question_id, answer, multiple_answers) VALUES

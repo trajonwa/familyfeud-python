@@ -86,7 +86,8 @@ def gui_event_logic():
                 if (answer in list_of_answers) and (answer not in answers_displayed):
                     
                     if (game_instance.similar_answer):
-                        sg.popup_auto_close(f"{temp_answer} is similar to {answer} on the board!")
+                        sg.popup_auto_close(f"{temp_answer} is similar to {answer} on the board!",
+                         no_titlebar=True, background_color='green', font=("Arial", 12))
                         answers_displayed.add(temp_answer.upper())
 
                     index = list_of_answers.index(answer)
@@ -188,7 +189,8 @@ def gui_event_logic():
                     - Other variables such as game round are changed when we on final round.  
                 """
                 if (game_instance.similar_answer):
-                        sg.popup_auto_close(f"{temp_answer} is similar to {answer.lower()} on the board!")
+                        sg.popup_auto_close(f"{temp_answer} is similar to {answer.lower()} on the board!",
+                         no_titlebar=True, background_color='green', font=("Arial", 12))
                         answers_displayed.add(temp_answer.upper())
 
                 num_of_correct_ans += 1
@@ -334,8 +336,7 @@ def gui_event_logic():
                         raise NameError
                     temp_list = [values[f'-SUBMITTED_ANSWER{ans + 1}-'], int(values[f'-SUBMITTED_SCORE{ans + 1}-'])]
                     list_of_new_answers.append(temp_list)
-                add_card_to_db(question.stip().upper(), list_of_new_answers)
-
+                add_card_to_db(question.strip().upper(), list_of_new_answers)
             except ValueError:
                 for ans in range(num_ans):
                     window7[f'-SUBMITTED_ANSWER{ans + 1}-'].update('')
