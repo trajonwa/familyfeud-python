@@ -10,6 +10,7 @@ def create_tables():
     """
     This function creates the database schema to be used in the game.
     Uses context manager to make connection.
+
     """
 
     with sqlite3.connect(db_name) as conn:
@@ -48,9 +49,11 @@ def intial_data():
     """
     Prefills database with data if it's the first time running the script.
     Uses context manager to make connection.
+
     """
 
     with sqlite3.connect(db_name) as conn:
+
         cursor_obj = conn.cursor()
 
         cursor_obj.execute("""INSERT INTO questionnare (question_id, question) VALUES
@@ -109,7 +112,7 @@ def intial_data():
 def fetch_all():
     """
     Collects all the data from the database to use in the game.
-    Might change it fetchmany if database gets too big.
+    Might change it to fetchmany if database gets too big.
     Uses context manager to make connection.
 
     """

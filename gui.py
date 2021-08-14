@@ -161,7 +161,8 @@ def make_window7(num=4):
     :param num:
     :return:
     """
-    layout = [[sg.Image(r'images/card.PNG')]]
+    layout = [[sg.Image(r'images/card.PNG')],
+                [sg.Text("Please seperate similar answers using '/' i.e Drinks/alcohol", text_color='green')]]
 
     for i in range(num):
         layout.append([sg.Text('Answer ' + str(i + 1)),

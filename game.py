@@ -15,7 +15,7 @@ def familyfeud_database():
 
 # A list of cards to help replicate generating random cards.
 familyfeud_database()
-list_of_cards = classes.cards
+set_of_cards = classes.cards
 
 # This list just contains a list of the answers in order to print said answers instead of using the dictionary.
 list_of_answers = []

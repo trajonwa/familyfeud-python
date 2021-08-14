@@ -1,6 +1,5 @@
 import time
 import game
-import random
 import PySimpleGUI as sg
 from gui import make_window1, make_window2, make_window3, make_window4,\
     make_window5, make_window6, make_window7, wrong_ans
@@ -16,7 +15,7 @@ def gui_event_logic():
 
     # start off with 1 window open
     window1, window2, window3, window4, \
-        window5, window6, window7, window8 = make_window1(), None, None, None, None, None, None, None
+        window5, window6, window7 = make_window1(), None, None, None, None, None, None
 
     while True:  # Event Loop
         window, event, values = sg.read_all_windows()
@@ -130,7 +129,7 @@ def gui_event_logic():
 
                 if (game_instance.round % 2) == 1:
                     answers_displayed = set()
-                    current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+                    current_card = game.set_of_cards.pop()
                     list_of_answers = []
 
                     for keys in current_card.answers:
@@ -214,7 +213,7 @@ def gui_event_logic():
                             window4['-TEAM2_SCORE-'].update(f"{current_team.name}'s score: {second_team.score}")
 
                         current_team = game_instance.get_next_team()
-                        current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+                        current_card = game.set_of_cards.pop()
                         game_instance.temp_score = 0
                         answers_displayed = set()
                         list_of_answers = []
@@ -262,7 +261,7 @@ def gui_event_logic():
                 second_team = Team(values['-TEAM2-'])
                 game_instance = Game(first_team, second_team)
                 game_instance.round = 1
-                current_card = game.list_of_cards.pop(random.randint(0, len(game.list_of_cards) - 1))
+                current_card = game.set_of_cards.pop()
                 current_team = game_instance.get_current_team()
                 list_of_answers = []
                 num_of_correct_ans = 0
@@ -337,6 +336,10 @@ def gui_event_logic():
                     temp_list = [values[f'-SUBMITTED_ANSWER{ans + 1}-'], int(values[f'-SUBMITTED_SCORE{ans + 1}-'])]
                     list_of_new_answers.append(temp_list)
                 add_card_to_db(question.strip().upper(), list_of_new_answers)
+                for ans in range(num_ans):
+                    window7[f'-SUBMITTED_ANSWER{ans + 1}-'].update('')
+                    window7[f'-SUBMITTED_SCORE{ans + 1}-'].update('')
+                window7.refresh()
                 sg.popup_auto_close("Card added successfully", no_titlebar=True, 
                                                                 background_color='green')
             except ValueError:
